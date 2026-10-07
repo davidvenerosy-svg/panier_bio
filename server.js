@@ -1,4 +1,5 @@
 require('dotenv').config();
+console.log("TEST MONGO_URI :", process.env.MONGO_URI);
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const express = require('express');
 const app = express();
