@@ -939,13 +939,26 @@
 
     <!-- SCRIPT JS -->
     <script>
-        // Initialisation de Stripe (clé publique configurée directement ou via variable d'environnement)
+        // Initialisation de Stripe gérée dynamiquement (évite la duplication et les conflits de clés)
         let stripe;
-        const STRIPE_PUBLISHABLE_KEY = "pk_live_51UE4Z5EFKvyRHxbLBw6WF2ZcFsMGWNtvh18bMN4vGq2b2UQWPFx8CC6bjekNwJLtpF4vDFhKYj4NCec8Pqi355U700OoUj1JZj"; // Remplacez par votre clé publique Stripe si nécessaire, ou gérez-la via le backend
 
-        document.addEventListener("DOMContentLoaded", function() {
-            if (typeof Stripe !== 'undefined') {
-                stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+        document.addEventListener("DOMContentLoaded", async function() {
+            // Récupération dynamique de la clé publique Stripe depuis le serveur
+            try {
+                const backendUrl = window.location.hostname.includes('localhost') 
+                    ? window.location.origin 
+                    : 'https://panier-bio.onrender.com';
+
+                const configResponse = await fetch(`${backendUrl}/config`);
+                const configData = await configResponse.json();
+
+                if (configData.publicKey && typeof Stripe !== 'undefined') {
+                    stripe = Stripe(configData.publicKey);
+                } else {
+                    console.error("Clé publique Stripe introuvable ou SDK Stripe non chargé.");
+                }
+            } catch (e) {
+                console.error("Erreur lors de la récupération de la configuration Stripe :", e);
             }
             
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
@@ -1058,7 +1071,6 @@
                         return;
                     }
 
-                    const montantTotalCentimes = Math.round(montantEuros * 100);
                     let detailsSurMesure = getSurMesureDetails();
                     const formData = new FormData(checkoutForm);
 
@@ -1076,19 +1088,16 @@
                     localStorage.setItem('soukinpanie_client', JSON.stringify(clientData));
 
                     try {
-                        // Détection automatique de l'URL du backend (local ou Render)
                         const backendUrl = window.location.hostname.includes('localhost') 
                             ? window.location.origin 
                             : 'https://panier-bio.onrender.com';
 
-                        // Modification vers la nouvelle route /create-checkout-session
                         const response = await fetch(`${backendUrl}/create-checkout-session`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
                             },
                             body: JSON.stringify({
-                                libellePanier: libelleFormule,
                                 formule: formuleValue,
                                 produitsSurMesure: detailsSurMesure,
                                 nom: formData.get('nom') || '',
@@ -1107,7 +1116,6 @@
                             return;
                         }
 
-                        // Redirection directe via data.url (ou repli Stripe Checkout)
                         if (data.url) {
                             window.location.href = data.url;
                         } else if (data.id && stripe) {
@@ -1160,15 +1168,9 @@
             selects.forEach(select => {
                 const quantite = parseFloat(select.value);
                 if (quantite > 0) {
-                    const vignette = select.closest('.bg-white');
-                    const nomProduit = vignette.querySelector('h3').getAttribute('data-name');
-                    const prixUnitaire = parseFloat(vignette.querySelector('.text-green-700').getAttribute('data-price'));
-                    produitsChoisis.push({
-                        nom: nomProduit,
-                        quantite: quantite,
-                        prixUnitaireEuros: prixUnitaire,
-                        totalLigneEuros: quantite * prixUnitaire
-                    });
+                    const card = select.closest('.bg-white');
+                    const nom = card.querySelector('[data-name]').getAttribute('data-name');
+                    produitsChoisis.push({ nom: nom, quantite: quantite });
                 }
             });
             return produitsChoisis;
@@ -1176,66 +1178,77 @@
 
         function updateSurMesureSummary() {
             const tbody = document.getElementById('sur-mesure-summary-body');
-            const totalDisplay = document.getElementById('sur-mesure-total-price');
-            const formSummaryDetails = document.getElementById('form-summary-details');
+            const formSummary = document.getElementById('form-summary-details');
+            const selects = document.querySelectorAll('.sur-mesure-select');
             
-            if (!tbody || !totalDisplay) return;
+            let htmlTable = '';
+            let htmlForm = '';
+            let totalProduits = 0;
+            let hasItems = false;
 
-            let produits = getSurMesureDetails();
-            let totalSurMesure = calculateSurMesureTotal();
+            selects.forEach(select => {
+                const qty = parseFloat(select.value);
+                if (qty > 0) {
+                    hasItems = true;
+                    const card = select.closest('.bg-white');
+                    const nom = card.querySelector('[data-name]').getAttribute('data-name');
+                    const unitPrice = parseFloat(card.querySelector('.text-green-700').getAttribute('data-price'));
+                    const totalLigne = qty * unitPrice;
+                    totalProduits += totalLigne;
 
-            if (produits.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-gray-500 italic">Aucun produit sélectionné pour le moment.</td></tr>`;
-                totalDisplay.innerText = "0,00 €";
-                if (formSummaryDetails) {
-                    formSummaryDetails.innerHTML = `<p class="italic">Aucun produit sur-mesure sélectionné (optionnel).</p>`;
-                }
-            } else {
-                let html = '';
-                let formHtml = '';
-                produits.forEach(p => {
-                    html += `
-                        <tr class="border-b border-gray-50">
-                            <td class="py-3 px-4 font-medium text-gray-800">${p.nom}</td>
-                            <td class="py-3 px-4 text-gray-600">${p.quantite}</td>
-                            <td class="py-3 px-4 text-gray-600">${p.prixUnitaireEuros.toFixed(2)} €</td>
-                            <td class="py-3 px-4 text-right font-bold text-green-700">${p.totalLigneEuros.toFixed(2)} €</td>
+                    htmlTable += `
+                        <tr class="border-b border-gray-100">
+                            <td class="py-3 px-4 font-medium text-gray-900">${nom}</td>
+                            <td class="py-3 px-4 text-gray-600">${qty}</td>
+                            <td class="py-3 px-4 text-gray-600">${unitPrice.toFixed(2)} €</td>
+                            <td class="py-3 px-4 text-right font-bold text-green-700">${totalLigne.toFixed(2)} €</td>
                         </tr>
                     `;
-                    formHtml += `<p>• ${p.nom} (${p.quantite}) : <strong>${p.totalLigneEuros.toFixed(2)} €</strong></p>`;
-                });
-                tbody.innerHTML = html;
-                totalDisplay.innerText = totalSurMesure.toFixed(2) + " €";
-                if (formSummaryDetails) {
-                    formSummaryDetails.innerHTML = formHtml;
+
+                    htmlForm += `<p>• ${nom} : ${qty} x ${unitPrice.toFixed(2)} € = <strong>${totalLigne.toFixed(2)} €</strong></p>`;
                 }
+            });
+
+            if (!hasItems) {
+                htmlTable = `<tr><td colspan="4" class="py-4 text-center text-gray-500 italic">Aucun produit sélectionné pour le moment.</td></tr>`;
+                htmlForm = `<p class="italic">Aucun produit sur-mesure sélectionné (optionnel).</p>`;
             }
+
+            if (tbody) tbody.innerHTML = htmlTable;
+            if (formSummary) formSummary.innerHTML = htmlForm;
+
+            const totalSpan = document.getElementById('sur-mesure-total-price');
+            if (totalSpan) totalSpan.innerText = totalProduits.toFixed(2) + ' €';
+
             updatePrice();
         }
 
         function updatePrice() {
             const select = document.getElementById('formule-select');
-            const priceDisplay = document.getElementById('price-display-checkout');
-            if (!select || !priceDisplay) return;
-
-            const selectedOption = select.options[select.selectedIndex];
-            const formulePrice = select.value !== 'aucun' ? parseFloat(selectedOption.getAttribute('data-price')) : 0;
-            const surMesurePrice = calculateSurMesureTotal();
-            
-            let fraisLivraison = (select.value === 'aucun' && surMesurePrice > 0) ? 10 : 0;
-            let totalGlobal = formulePrice + surMesurePrice + fraisLivraison;
-
-            let texteTotal = totalGlobal.toFixed(2) + " €";
-            if (fraisLivraison > 0) {
-                texteTotal += ` (incluant ${fraisLivraison} € de frais de livraison)`;
+            let prixFormule = 0;
+            if (select && select.value !== 'aucun') {
+                const selectedOption = select.options[select.selectedIndex];
+                prixFormule = parseFloat(selectedOption.getAttribute('data-price')) || 0;
             }
-            priceDisplay.innerText = texteTotal;
+
+            let montantSurMesure = calculateSurMesureTestTotal = calculateSurMesureTotal();
+            let fraisLivraison = ((!select || select.value === 'aucun') && montantSurMesure > 0) ? 10 : 0;
+            let totalGlobal = prixFormule + montantSurMesure + fraisLivraison;
+
+            const display = document.getElementById('price-display-checkout');
+            if (display) {
+                let text = `${totalGlobal.toFixed(2)} €`;
+                if (frysLivraison = fraisLivraison > 0) {
+                    text += ` (inclut 10 € de frais de livraison)`;
+                }
+                display.innerText = text;
+            }
         }
 
         function ajouterAuPanierGlobal() {
-            const commandeSection = document.getElementById('commande');
-            if (commandeSection) {
-                commandeSection.scrollIntoView({ behavior: 'smooth' });
+            const section = document.getElementById('commande');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
             }
         }
     </script>

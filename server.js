@@ -1,6 +1,6 @@
 require('dotenv').config();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-console.log(process.env.STRIPE_SECRET_KEY);
+console.log("Serveur démarré sur le port 3000");
 const express = require('express');
 const app = express();
 const fs = require('fs');
@@ -206,6 +206,20 @@ app.post('/webhook', async (req, res) => {
     if (event.type === 'checkout.session.completed') {
         const session = event.data.object;
         
+        // Reconstitution des morceaux de produits sur-mesure depuis les métadonnées
+        let produitsSurMesureParses = [];
+        try {
+            const m1 = session.metadata.produitsSurMesure_1 || '';
+            const m2 = session.metadata.produitsSurMesure_2 || '';
+            const m3 = session.metadata.produitsSurMesure_3 || '';
+            const combinedString = m1 + m2 + m3;
+            if (combinedString.trim() !== '') {
+                produitsSurMesureParses = JSON.parse(combinedString);
+            }
+        } catch (errParse) {
+            console.error("Erreur lors du parsing des produits sur-mesure des métadonnées :", errParse);
+        }
+
         // Traitement de la commande validée
         const nouvelleCommande = {
             idSession: session.id,
@@ -216,6 +230,7 @@ app.post('/webhook', async (req, res) => {
                 telephone: session.metadata.telephone
             },
             formule: session.metadata.formule,
+            produitsSurMesure: produitsSurMesureParses,
             dateLivraison: session.metadata.date_livraison,
             message: session.metadata.message,
             montantTotal: session.metadata.montantTotalEuros,
