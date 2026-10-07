@@ -1,0 +1,727 @@
+[
+  {
+    "dateCommande": "30/09/2026 15:02:13",
+    "formule": "panier_sur_mesure",
+    "libelle": "Panier Sur-Mesure (1 panier personnalisé - 3.80 €)",
+    "montantEuros": 3.8,
+    "produitsSurMesure": [
+      {
+        "nom": "Betterave",
+        "quantite": 1,
+        "prixUnitaireEuros": 3.8,
+        "totalLigneEuros": 3.8
+      }
+    ]
+  },
+  {
+    "dateCommande": "30/09/2026 15:03:07",
+    "formule": "panier_unique",
+    "libelle": "Le panier Découverte (1 panier - 40 €)",
+    "montantEuros": 40,
+    "produitsSurMesure": "Aucun (formule standard)"
+  },
+  {
+    "dateCommande": "30/09/2026 15:06:28",
+    "formuleChoisie": "Le panier Découverte (1 panier - 40 €)",
+    "montantEuros": 40,
+    "client": {
+      "nom": "Non renseigné",
+      "prenom": "Non renseigné",
+      "adresse": "Non renseignée",
+      "telephone": "Non renseigné",
+      "dateLivraison": "Non renseignée",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": "Aucun (Panier standard ou abonnement)"
+  },
+  {
+    "dateCommande": "30/09/2026 15:07:19",
+    "formuleChoisie": "Le panier Découverte (1 panier - 40 €)",
+    "montantEuros": 40,
+    "client": {
+      "nom": "Non renseigné",
+      "prenom": "Non renseigné",
+      "adresse": "Non renseignée",
+      "telephone": "Non renseigné",
+      "dateLivraison": "Non renseignée",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": "Aucun (Panier standard ou abonnement)"
+  },
+  {
+    "dateCommande": "30/09/2026 15:12:02",
+    "formuleChoisie": "Le panier Découverte (1 panier - 40 €)",
+    "montantEuros": 40,
+    "client": {
+      "nom": "Non renseigné",
+      "prenom": "Non renseigné",
+      "adresse": "Non renseignée",
+      "telephone": "Non renseigné",
+      "dateLivraison": "Non renseignée",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": "Aucun (Panier standard ou abonnement)"
+  },
+  {
+    "dateCommande": "30/09/2026 15:19:13",
+    "formuleChoisie": "Panier Sur-Mesure (1 panier personnalisé - 3.00 €)",
+    "montantEuros": 3,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "14 rue",
+      "telephone": "0692311873",
+      "dateLivraison": "2026-10-05",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": [
+      {
+        "nom": "Bananes",
+        "quantite": 1,
+        "prixUnitaireEuros": 3,
+        "totalLigneEuros": 3
+      }
+    ]
+  },
+  {
+    "dateCommande": "30/09/2026 15:27:23",
+    "formuleChoisie": "Le panier Découverte (1 panier - 40 €)",
+    "montantEuros": 40,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "14 rue",
+      "telephone": "0692311873",
+      "dateLivraison": "2026-10-05",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": "Aucun (Panier standard ou abonnement)"
+  },
+  {
+    "dateCommande": "30/09/2026 15:27:28",
+    "formuleChoisie": "Le panier Découverte (1 panier - 40 €)",
+    "montantEuros": 40,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "14 rue",
+      "telephone": "0692311873",
+      "dateLivraison": "2026-10-05",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": "Aucun (Panier standard ou abonnement)"
+  },
+  {
+    "dateCommande": "30/09/2026 15:29:05",
+    "formuleChoisie": "Panier Sur-Mesure (1 panier personnalisé - 9.90 €)",
+    "montantEuros": 9.9,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "61B CHEMIN FRANCOIS CADET",
+      "telephone": "0692311873",
+      "dateLivraison": "2026-10-05",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": [
+      {
+        "nom": "Pomme de Terre",
+        "quantite": 2,
+        "prixUnitaireEuros": 4.95,
+        "totalLigneEuros": 9.9
+      }
+    ]
+  },
+  {
+    "dateCommande": "30/09/2026 15:29:08",
+    "formuleChoisie": "Panier Sur-Mesure (1 panier personnalisé - 9.90 €)",
+    "montantEuros": 9.9,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "61B CHEMIN FRANCOIS CADET",
+      "telephone": "0692311873",
+      "dateLivraison": "2026-10-05",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": [
+      {
+        "nom": "Pomme de Terre",
+        "quantite": 2,
+        "prixUnitaireEuros": 4.95,
+        "totalLigneEuros": 9.9
+      }
+    ]
+  },
+  {
+    "dateCommande": "30/09/2026 15:30:14",
+    "formuleChoisie": "Panier Sur-Mesure (1 panier personnalisé - 9.90 €)",
+    "montantEuros": 9.9,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "61B CHEMIN FRANCOIS CADET",
+      "telephone": "0692311873",
+      "dateLivraison": "2026-10-05",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": [
+      {
+        "nom": "Pomme de Terre",
+        "quantite": 2,
+        "prixUnitaireEuros": 4.95,
+        "totalLigneEuros": 9.9
+      }
+    ]
+  },
+  {
+    "dateCommande": "30/09/2026 15:37:34",
+    "formuleChoisie": "Panier Sur-Mesure (1 panier personnalisé - 4.95 €)",
+    "montantEuros": 4.95,
+    "client": {
+      "nom": "VENEROSY",
+      "prenom": "gino",
+      "adresse": "dsqfdqsfsd",
+      "telephone": "0692311873",
+      "dateLivraison": "2026-10-05",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": [
+      {
+        "nom": "Pomme de Terre",
+        "quantite": 1,
+        "prixUnitaireEuros": 4.95,
+        "totalLigneEuros": 4.95
+      }
+    ]
+  },
+  {
+    "dateCommande": "30/09/2026 15:49:31",
+    "formuleChoisie": "Panier Sur-Mesure (1 panier personnalisé - 10.95 €)",
+    "montantEuros": 10.95,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "14 rue",
+      "telephone": "0692311873",
+      "dateLivraison": "2026-10-05",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": [
+      {
+        "nom": "Pomme de Terre",
+        "quantite": 1,
+        "prixUnitaireEuros": 4.95,
+        "totalLigneEuros": 4.95
+      },
+      {
+        "nom": "Bredes",
+        "quantite": 3,
+        "prixUnitaireEuros": 2,
+        "totalLigneEuros": 6
+      }
+    ]
+  },
+  {
+    "dateCommande": "30/09/2026 15:49:43",
+    "formuleChoisie": "Panier Sur-Mesure (1 panier personnalisé - 10.95 €)",
+    "montantEuros": 10.95,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "14 rue",
+      "telephone": "0692311873",
+      "dateLivraison": "2026-10-05",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": [
+      {
+        "nom": "Pomme de Terre",
+        "quantite": 1,
+        "prixUnitaireEuros": 4.95,
+        "totalLigneEuros": 4.95
+      },
+      {
+        "nom": "Bredes",
+        "quantite": 3,
+        "prixUnitaireEuros": 2,
+        "totalLigneEuros": 6
+      }
+    ]
+  },
+  {
+    "dateCommande": "30/09/2026 15:51:34",
+    "formuleChoisie": "Panier Sur-Mesure (1 panier personnalisé - 10.95 €)",
+    "montantEuros": 10.95,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "14 rue",
+      "telephone": "0692311873",
+      "dateLivraison": "2026-10-05",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": [
+      {
+        "nom": "Pomme de Terre",
+        "quantite": 1,
+        "prixUnitaireEuros": 4.95,
+        "totalLigneEuros": 4.95
+      },
+      {
+        "nom": "Bredes",
+        "quantite": 3,
+        "prixUnitaireEuros": 2,
+        "totalLigneEuros": 6
+      }
+    ]
+  },
+  {
+    "dateCommande": "30/09/2026 15:54:16",
+    "formuleChoisie": "Panier Sur-Mesure (1 panier personnalisé - 10.95 €)",
+    "montantEuros": 10.95,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "14 rue",
+      "telephone": "0692311873",
+      "dateLivraison": "2026-10-05",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": [
+      {
+        "nom": "Pomme de Terre",
+        "quantite": 1,
+        "prixUnitaireEuros": 4.95,
+        "totalLigneEuros": 4.95
+      },
+      {
+        "nom": "Bredes",
+        "quantite": 3,
+        "prixUnitaireEuros": 2,
+        "totalLigneEuros": 6
+      }
+    ]
+  },
+  {
+    "dateCommande": "30/09/2026 15:54:21",
+    "formuleChoisie": "Panier Sur-Mesure (1 panier personnalisé - 10.95 €)",
+    "montantEuros": 10.95,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "14 rue",
+      "telephone": "0692311873",
+      "dateLivraison": "2026-10-05",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": [
+      {
+        "nom": "Pomme de Terre",
+        "quantite": 1,
+        "prixUnitaireEuros": 4.95,
+        "totalLigneEuros": 4.95
+      },
+      {
+        "nom": "Bredes",
+        "quantite": 3,
+        "prixUnitaireEuros": 2,
+        "totalLigneEuros": 6
+      }
+    ]
+  },
+  {
+    "dateCommande": "30/09/2026 15:54:54",
+    "formuleChoisie": "Le panier Découverte (1 panier - 40 €)",
+    "montantEuros": 40,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "hrf9gh5d",
+      "telephone": "0692311873",
+      "dateLivraison": "2026-10-05",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": "Aucun (Panier standard ou abonnement)"
+  },
+  {
+    "dateCommande": "30/09/2026 16:01:13",
+    "formuleChoisie": "Le panier Découverte (1 panier - 40 €)",
+    "montantEuros": 40,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "hrf9gh5d",
+      "telephone": "0692311873",
+      "dateLivraison": "2026-10-05",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": "Aucun (Panier standard ou abonnement)"
+  },
+  {
+    "dateCommande": "30/09/2026 16:01:42",
+    "formuleChoisie": "Le panier Découverte (1 panier - 40 €)",
+    "montantEuros": 40,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "gfsq",
+      "telephone": "0692311873",
+      "dateLivraison": "2026-10-05",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": "Aucun (Panier standard ou abonnement)"
+  },
+  {
+    "dateCommande": "30/09/2026 16:05:02",
+    "formuleChoisie": "Panier Sur-Mesure (1 panier personnalisé - 3.80 €)",
+    "montantEuros": 3.8,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "hrf9gh5d",
+      "telephone": "0692311873",
+      "dateLivraison": "Non renseignée",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": [
+      {
+        "nom": "Betterave",
+        "quantite": 1,
+        "prixUnitaireEuros": 3.8,
+        "totalLigneEuros": 3.8
+      }
+    ]
+  },
+  {
+    "dateCommande": "30/09/2026 16:05:30",
+    "formuleChoisie": "Le panier Découverte (1 panier - 40 €)",
+    "montantEuros": 40,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "hrf9gh5d",
+      "telephone": "0692311873",
+      "dateLivraison": "Non renseignée",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": "Aucun (Panier standard ou abonnement)"
+  },
+  {
+    "dateCommande": "30/09/2026 16:23:24",
+    "formuleChoisie": "Le panier Découverte (1 panier - 40 €)",
+    "montantEuros": 40,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "gfsq",
+      "telephone": "0692311873",
+      "dateLivraison": "Non renseignée",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": "Aucun (Panier standard ou abonnement)"
+  },
+  {
+    "dateCommande": "30/09/2026 16:28:13",
+    "formuleChoisie": "Panier Sur-Mesure (1 panier personnalisé - 19.80 €)",
+    "montantEuros": 19.8,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": ",jg",
+      "telephone": "0692311873",
+      "dateLivraison": "2026-10-05",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": [
+      {
+        "nom": "Pomme de Terre",
+        "quantite": 4,
+        "prixUnitaireEuros": 4.95,
+        "totalLigneEuros": 19.8
+      }
+    ]
+  },
+  {
+    "dateCommande": "30/09/2026 16:28:45",
+    "formuleChoisie": "Panier Sur-Mesure (1 panier personnalisé - 14.85 €)",
+    "montantEuros": 14.85,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "61B CHEMIN FRANCOIS CADET",
+      "telephone": "0692311873",
+      "dateLivraison": "2026-10-05",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": [
+      {
+        "nom": "Pomme de Terre",
+        "quantite": 3,
+        "prixUnitaireEuros": 4.95,
+        "totalLigneEuros": 14.850000000000001
+      }
+    ]
+  },
+  {
+    "dateCommande": "30/09/2026 16:31:20",
+    "formuleChoisie": "Le panier Découverte (1 panier - 40 €)",
+    "montantEuros": 40,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "141414",
+      "telephone": "0692311873",
+      "dateLivraison": "2026-10-05",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": "Aucun (Panier standard ou abonnement)"
+  },
+  {
+    "dateCommande": "30/09/2026 16:39:03",
+    "formuleChoisie": "Panier Sur-Mesure (1 panier personnalisé - 19.80 €)",
+    "montantEuros": 19.8,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "vf",
+      "adresse": "bs",
+      "telephone": "0692311873",
+      "dateLivraison": "2026-10-05",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": [
+      {
+        "nom": "Pomme de Terre",
+        "quantite": 4,
+        "prixUnitaireEuros": 4.95,
+        "totalLigneEuros": 19.8
+      }
+    ]
+  },
+  {
+    "dateCommande": "30/09/2026 16:39:27",
+    "formuleChoisie": "Le panier Découverte (1 panier - 40 €)",
+    "montantEuros": 40,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "vf",
+      "adresse": "bs",
+      "telephone": "0692311873",
+      "dateLivraison": "Non renseignée",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": "Aucun (Panier standard ou abonnement)"
+  },
+  {
+    "dateCommande": "30/09/2026 16:39:45",
+    "formuleChoisie": "Votre Carnet de 5 Paniers Bio (190 € - soit 38 €/panier)",
+    "montantEuros": 190,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "vf",
+      "adresse": "bs",
+      "telephone": "0692311873",
+      "dateLivraison": "Non renseignée",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": "Aucun (Panier standard ou abonnement)"
+  },
+  {
+    "dateCommande": "30/09/2026 16:40:02",
+    "formuleChoisie": "Votre Carnet de 10 Paniers Bio (360 € - soit 36 €/panier)",
+    "montantEuros": 360,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "vf",
+      "adresse": "bs",
+      "telephone": "0692311873",
+      "dateLivraison": "Non renseignée",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": "Aucun (Panier standard ou abonnement)"
+  },
+  {
+    "dateCommande": "30/09/2026 16:40:17",
+    "formuleChoisie": "Club Bio - Formule Petite Saison (210 €)",
+    "montantEuros": 210,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "vf",
+      "adresse": "bs",
+      "telephone": "0692311873",
+      "dateLivraison": "Non renseignée",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": "Aucun (Panier standard ou abonnement)"
+  },
+  {
+    "dateCommande": "30/09/2026 16:40:29",
+    "formuleChoisie": "Club Bio - Formule Grande Saison (420 €)",
+    "montantEuros": 420,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "vf",
+      "adresse": "bs",
+      "telephone": "0692311873",
+      "dateLivraison": "Non renseignée",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": "Aucun (Panier standard ou abonnement)"
+  },
+  {
+    "dateCommande": "30/09/2026 16:55:39",
+    "formuleChoisie": "Le panier Découverte (1 panier - 40 €)",
+    "montantEuros": 43.75,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "vdqvd",
+      "telephone": "0692311873",
+      "dateLivraison": "2026-10-05",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    }
+  },
+  {
+    "dateCommande": "30/09/2026 16:57:27",
+    "formuleChoisie": "Produits sur-mesure uniquement",
+    "montantEuros": 5.25,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "vdqvd",
+      "telephone": "0692311873",
+      "dateLivraison": "Non renseignée",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    }
+  },
+  {
+    "dateCommande": "30/09/2026 17:02:49",
+    "formuleChoisie": "Le panier Découverte (1 panier - 40 €)",
+    "montantEuros": 48.7,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "fds",
+      "telephone": "0692311873",
+      "dateLivraison": "2026-10-05",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    }
+  },
+  {
+    "dateCommande": "30/09/2026 17:05:23",
+    "formuleChoisie": "Le panier Découverte (1 panier - 40 €)",
+    "montantEuros": 48.7,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "fds",
+      "telephone": "0692311873",
+      "dateLivraison": "Non renseignée",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": [
+      {
+        "nom": "Tomates anciennes",
+        "quantite": 0.5,
+        "prixUnitaireEuros": 7.5,
+        "totalLigneEuros": 3.75
+      },
+      {
+        "nom": "Pomme de Terre",
+        "quantite": 1,
+        "prixUnitaireEuros": 4.95,
+        "totalLigneEuros": 4.95
+      }
+    ]
+  },
+  {
+    "dateCommande": "30/09/2026 17:06:10",
+    "formuleChoisie": "Le panier Découverte (1 panier - 40 €)",
+    "montantEuros": 48.7,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "cqcq",
+      "telephone": "0692311873",
+      "dateLivraison": "2026-10-05",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": [
+      {
+        "nom": "Tomates anciennes",
+        "quantite": 0.5,
+        "prixUnitaireEuros": 7.5,
+        "totalLigneEuros": 3.75
+      },
+      {
+        "nom": "Pomme de Terre",
+        "quantite": 1,
+        "prixUnitaireEuros": 4.95,
+        "totalLigneEuros": 4.95
+      }
+    ]
+  },
+  {
+    "dateCommande": "01/10/2026 12:26:54",
+    "formuleChoisie": "Votre Carnet de 5 Paniers Bio (190 € - soit 38 €/panier)",
+    "montantEuros": 198,
+    "client": {
+      "nom": "Venerosy",
+      "prenom": "David",
+      "adresse": "daz",
+      "telephone": "0692311873",
+      "dateLivraison": "2026-10-05",
+      "precisions": "Aucune",
+      "codePromo": "Aucun"
+    },
+    "produitsSurMesure": [
+      {
+        "nom": "Bananes",
+        "quantite": 2,
+        "prixUnitaireEuros": 3,
+        "totalLigneEuros": 6
+      },
+      {
+        "nom": "Salade",
+        "quantite": 1,
+        "prixUnitaireEuros": 2,
+        "totalLigneEuros": 2
+      }
+    ]
+  }
+]

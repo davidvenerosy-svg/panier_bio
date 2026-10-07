@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soukinpanié - Livraison de paniers bio à domicile et au bureau</title>
+    
+    <!-- Tailwind CSS CDN officiel -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts pour la police cursive -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+
+    <!-- Flatpickr (Calendrier) CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
+
+    <!-- SDK Stripe.js pour la redirection vers Checkout -->
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <!-- Styles CSS spécifiques -->
+    <style>
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            will-change: opacity, transform;
+        }
+        .reveal.active {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+
+        @keyframes fadeInUpStagger {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .club-bio-bullet {
+            opacity: 0;
+            animation: fadeInUpStagger 0.6s ease-out forwards;
+        }
+
+        .club-bio-bullet:nth-child(1) { animation-delay: 0.2s; }
+        .club-bio-bullet:nth-child(2) { animation-delay: 0.4s; }
+        .club-bio-bullet:nth-child(3) { animation-delay: 0.6s; }
+        .club-bio-bullet:nth-child(4) { animation-delay: 0.8s; }
+
+        .font-partner {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+
+        .flatpickr-day.prevMonthDay, 
+        .flatpickr-day.nextMonthDay {
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+
+        .flatpickr-day.monday-highlight {
+            background-color: #16a34a !important;
+            color: #ffffff !important;
+            font-weight: bold !important;
+            border-radius: 8px !important;
+            border: 1px solid #15803d !important;
+        }
+        .flatpickr-day.monday-highlight:hover {
+            background-color: #15803d !important;
+        }
+        .flatpickr-day.selected {
+            background-color: #f59e0b !important;
+            border-color: #d97706 !important;
+            color: #111827 !important;
+        }
+    </style>
+</head>
+<body class="bg-amber-50/35 text-gray-800 font-sans">
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-2.5">
+                <i class="fa-solid fa-leaf text-green-600 text-2xl"></i>
+                <div class="flex flex-col sm:flex-row sm:items-baseline sm:gap-1.5 leading-tight">
+                    <span class="text-xl font-bold tracking-tight text-green-800">Soukinpanié</span>
+                    <span class="text-xs sm:text-sm font-semibold text-amber-700 font-partner">avec Le Jardin Bio</span>
+                </div>
+            </div>
+            
+            <nav class="hidden md:flex items-center space-x-8 font-medium">
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 hover:text-green-600 transition py-2 focus:outline-none">
+                        Nos Offres <i class="fa-solid fa-chevron-down text-xs transition-transform group-hover:rotate-180"></i>
+                    </button>
+                    <div class="absolute left-0 mt-0 w-56 bg-white border border-gray-100 rounded-xl shadow-xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <a href="#panier-decouverte" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition">Le panier Découverte</a>
+                        <a href="#les-carnets" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition">Les carnets</a>
+                        <a href="#le-club-bio" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition">Le Club Bio</a>
+                    </div>
+                </div>
+
+                <a href="#panier-sur-mesure" class="hover:text-green-600 transition">Voir notre étalage</a>
+                <a href="#producteur" class="hover:text-green-600 transition">Le Producteur</a>
+                <a href="#commande" class="hover:text-green-600 transition">Commander</a>
+                <a href="#contact" class="hover:text-green-600 transition">Contact</a>
+            </nav>
+            
+            <div class="flex items-center space-x-3">
+                <a href="#commande" class="bg-green-600 text-white px-5 py-2.5 rounded-full font-medium shadow hover:bg-green-700 transition">Commander</a>
+                <button id="mobile-menu-btn" class="md:hidden text-gray-700 hover:text-green-600 focus:outline-none p-2" aria-label="Menu Mobile">
+                    <i id="menu-icon" class="fa-solid fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-gray-200 px-4 pt-2 pb-4 space-y-2 font-medium">
+            <div>
+                <button id="mobile-dropdown-btn" class="w-full flex justify-between items-center py-2 text-gray-700 hover:text-green-600 focus:outline-none">
+                    <span>Nos Offres</span>
+                    <i id="mobile-dropdown-icon" class="fa-solid fa-chevron-down text-xs transition-transform"></i>
+                </button>
+                <div id="mobile-dropdown-content" class="hidden pl-4 py-1 space-y-2 border-l-2 border-green-100 my-1">
+                    <a href="#panier-decouverte" class="block py-1.5 text-sm text-gray-600 hover:text-green-600 mobile-nav-link">Le panier Découverte</a>
+                    <a href="#les-carnets" class="block py-1.5 text-sm text-gray-600 hover:text-green-600 mobile-nav-link">Les carnets</a>
+                    <a href="#le-club-bio" class="block py-1.5 text-sm text-gray-600 hover:text-green-600 mobile-nav-link">Le Club Bio</a>
+                </div>
+            </div>
+
+            <a href="#panier-sur-mesure" class="block py-2 text-gray-700 hover:text-green-600 mobile-nav-link">Voir notre étalage</a>
+            <a href="#producteur" class="block py-2 text-gray-700 hover:text-green-600 mobile-nav-link">Le Producteur</a>
+            <a href="#commande" class="block py-2 text-gray-700 hover:text-green-600 mobile-nav-link">Commander</a>
+            <a href="#contact" class="block py-2 text-gray-700 hover:text-green-600 mobile-nav-link">Contact</a>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative bg-gradient-to-r from-green-900/90 to-emerald-800/90 text-white py-32 px-4 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1920&q=80" alt="Légumes bio frais" class="w-full h-full object-cover mix-blend-overlay opacity-30">
+        </div>
+        
+        <div class="relative z-10 max-w-4xl mx-auto text-center space-y-6">
+            <div class="inline-flex items-center gap-2 bg-green-800/80 border border-green-500 text-white px-4 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase shadow-md backdrop-blur-sm">
+                <span class="bg-amber-400 text-green-950 px-2 py-0.5 rounded font-extrabold text-[11px]">AB</span>
+                <span>Agriculture Biologique - Certifié</span>
+            </div>
+
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight">Le meilleur du bio, livré chez vous ou au bureau</h1>
+            <p class="text-lg md:text-xl text-green-100 max-w-2xl mx-auto">Des fruits et légumes locaux, de saison et récoltés avec passion, livrés directement sur votre pas de porte ou sur votre lieu de travail à La Réunion.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4 pt-4">
+                <a href="#panier-decouverte" class="bg-amber-400 text-gray-900 font-bold px-8 py-3.5 rounded-full shadow-lg hover:bg-amber-300 transition">Découvrir nos offres</a>
+                <a href="#le-club-bio" class="bg-transparent border-2 border-white text-white font-bold px-8 py-3.5 rounded-full hover:bg-white/10 transition">Le Club Bio</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 1 : LE PANIER DÉCOUVERTE -->
+    <section id="panier-decouverte" class="py-20 px-4 max-w-7xl mx-auto scroll-mt-28">
+        <div class="text-center space-y-4 mb-12 reveal">
+            <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Offre Découverte</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-green-900">Le Panier de la Semaine</h2>
+            <p class="text-gray-600 max-w-xl mx-auto">Idéal pour tester nos produits locaux sans engagement. 1 panier généreux 100% de saison.</p>
+        </div>
+
+        <div class="max-w-md mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-green-600 flex flex-col justify-between reveal hover:shadow-2xl transition">
+            <div class="bg-gray-900 flex items-center justify-center relative w-full overflow-hidden">
+                <img src="https://lh3.googleusercontent.com/d/1_6UbqHXgGvjPQBOOhnff6Q13k5v5NGX5" alt="Le panier Découverte" class="w-full h-auto object-cover block">
+                <div class="absolute top-2 right-2 bg-green-600 text-white text-[10px] font-bold px-2.5 py-1 rounded uppercase">Sans engagement</div>
+            </div>
+
+            <div class="p-6 space-y-4 flex-1 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-900">Panier Découverte</h3>
+                    <p class="text-gray-600 text-xs mt-1">Commandez un panier unique pour la semaine de votre choix.</p>
+                    
+                    <ul class="space-y-2 text-xs text-gray-700 font-medium bg-green-50/50 p-4 rounded-xl border border-green-100 mt-4">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-square-check text-green-600"></i> Légumes frais et de saison</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-square-check text-green-600"></i> Fruits du terroir réunionnais</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-square-check text-green-600"></i> Livraison incluse (domicile / bureau)</li>
+                    </ul>
+                </div>
+
+                <div class="pt-4 flex items-baseline justify-between border-t border-gray-100">
+                    <span class="text-sm font-semibold text-gray-500">Tarif unique :</span>
+                    <div class="text-3xl font-extrabold text-green-700">40 €</div>
+                </div>
+            </div>
+            <div class="p-4 bg-gray-50 border-t border-gray-100">
+                <a href="#commande" onclick="selectFormule('panier_unique')" class="block text-center bg-green-600 text-white text-sm font-medium py-3 rounded-lg hover:bg-green-700 transition shadow">Commander ce panier</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2 : LES CARNETS DE PANIERS -->
+    <section id="les-carnets" class="py-20 px-4 max-w-7xl mx-auto bg-emerald-50/40 border-y border-emerald-100 scroll-mt-28">
+        <div class="text-center space-y-4 mb-16 reveal">
+            <span class="bg-amber-100 text-amber-900 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Formules Flexibles</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-green-900">Votre carnet</h2>
+            <p class="text-gray-600 max-w-xl mx-auto">Avec votre carnet de 5 ou 10 paniers, commandez en fonction de vos besoins et de vos envies.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            
+            <!-- Carnet 5 Paniers -->
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-green-600 flex flex-col justify-between relative reveal hover:shadow-2xl transition">
+                <div class="bg-amber-400 text-gray-900 text-xs font-bold text-center py-1.5 uppercase tracking-wider">Formule 5 paniers</div>
+                <div class="bg-gray-900 flex items-center justify-center relative w-full overflow-hidden">
+                    <img src="https://lh3.googleusercontent.com/d/1_6UbqHXgGvjPQBOOhnff6Q13k5v5NGX5" alt="Carnet 5 paniers" class="w-full h-auto object-cover block">
+                </div>
+
+                <div class="p-6 space-y-4 flex-1 flex flex-col justify-between">
+                    <div>
+                        <span class="bg-green-100 text-green-900 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Votre Carnet de 5 Paniers Bio</span>
+                        <p class="text-gray-600 text-xs mt-3">5 paniers à commander quand vous voulez. Valable 3 mois à compter de la première commande.</p>
+                        
+                        <ul class="space-y-2 text-xs text-gray-700 font-medium bg-green-50/50 p-4 rounded-xl border border-green-200 mt-4">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-green-600"></i> 5 livraisons à votre rythme</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-green-600"></i> 38 € le panier au lieu de 40 €</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-green-600"></i> Valable 3 mois</li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-4 flex items-baseline justify-between border-t border-gray-100">
+                        <span class="text-sm font-semibold text-gray-500">Total du carnet :</span>
+                        <div class="text-3xl font-extrabold text-green-700">190 € <span class="text-xs font-normal text-gray-500">(38 €/u)</span></div>
+                    </div>
+                </div>
+                <div class="p-4 bg-gray-50 border-t border-gray-100">
+                    <a href="#commande" onclick="selectFormule('formule_5')" class="block text-center bg-green-600 text-white text-sm font-medium py-3 rounded-lg hover:bg-green-700 transition shadow">Choisir le carnet de 5</a>
+                </div>
+            </div>
+
+            <!-- Carnet 10 Paniers -->
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-amber-500 flex flex-col justify-between relative reveal hover:shadow-2xl transition">
+                <div class="bg-green-700 text-white text-xs font-bold text-center py-1.5 uppercase tracking-wider">Formule 10 paniers (Meilleure offre)</div>
+                <div class="bg-gray-900 flex items-center justify-center relative w-full overflow-hidden">
+                    <img src="https://lh3.googleusercontent.com/d/1_6UbqHXgGvjPQBOOhnff6Q13k5v5NGX5" alt="Carnet 10 paniers" class="w-full h-auto object-cover block">
+                </div>
+
+                <div class="p-6 space-y-4 flex-1 flex flex-col justify-between">
+                    <div>
+                        <span class="bg-amber-100 text-amber-900 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Votre Carnet de 10 Paniers Bio</span>
+                        <p class="text-gray-600 text-xs mt-3">10 paniers à commander quand vous voulez. Valable 6 mois à compter de la première commande.</p>
+                        
+                        <ul class="space-y-2 text-xs text-gray-700 font-medium bg-amber-50/50 p-4 rounded-xl border border-amber-200 mt-4">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-600"></i> 10 livraisons à votre rythme</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-600"></i> 36 € le panier au lieu de 40 €</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-600"></i> Valable 6 mois</li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-4 flex items-baseline justify-between border-t border-gray-100">
+                        <span class="text-sm font-semibold text-gray-500">Total du carnet :</span>
+                        <div class="text-3xl font-extrabold text-green-700">360 € <span class="text-xs font-normal text-gray-500">(36 €/u)</span></div>
+                    </div>
+                </div>
+                <div class="p-4 bg-gray-50 border-t border-gray-100">
+                    <a href="#commande" onclick="selectFormule('formule_10')" class="block text-center bg-amber-500 text-gray-900 font-bold text-sm py-3 rounded-lg hover:bg-amber-400 transition shadow">Choisir le carnet de 10</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 3 : LE CLUB BIO -->
+    <section id="le-club-bio" class="relative py-20 px-4 overflow-hidden scroll-mt-28">
+        <div class="absolute inset-0 z-0 bg-gradient-to-br from-emerald-100/70 via-green-50/60 to-teal-100/50 pointer-events-none"></div>
+
+        <div class="absolute inset-0 z-0 opacity-10">
+            <img src="https://images.unsplash.com/photo-1595974482597-4f6c4f705517?auto=format&fit=crop&w=1920&q=80" alt="Gens travaillant dans un maraîcher" class="w-full h-full object-cover">
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto">
+            <div class="text-center space-y-4 mb-16 reveal">
+                <span class="bg-emerald-200/80 text-emerald-900 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider shadow-sm border border-emerald-300">Le choix de la sérénité</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-green-950">Le Club Bio</h2>
+                
+                <div class="max-w-xl mx-auto mt-6 bg-white/90 sm:p-8 p-6 rounded-3xl shadow-xl border border-emerald-200/85 backdrop-blur-md relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-emerald-200/20 rounded-full blur-2xl pointer-events-none"></div>
+                    <p class="text-green-900 font-bold mb-5 text-base tracking-wide border-b border-emerald-200/60 pb-3 text-right">Le choix de la sérénité maximale :</p>
+                    <ul class="space-y-3.5 inline-block text-left w-full">
+                        <li class="club-bio-bullet flex items-center gap-3.5 bg-white/95 backdrop-blur-sm px-4 py-3 rounded-2xl shadow-sm border border-emerald-100 text-sm text-gray-700 transition hover:translate-x-1 duration-300">
+                            <span class="w-7 h-7 rounded-lg bg-green-100 text-green-700 flex items-center justify-center shrink-0 shadow-inner">
+                                <i class="fa-solid fa-seedling text-xs"></i>
+                            </span>
+                            <span>Recevez votre panier au rythme des saisons.</span>
+                        </li>
+                        <li class="club-bio-bullet flex items-center gap-3.5 bg-white/95 backdrop-blur-sm px-4 py-3 rounded-2xl shadow-sm border border-emerald-100 text-sm text-gray-700 transition hover:translate-x-1 duration-300">
+                            <span class="w-7 h-7 rounded-lg bg-green-100 text-green-700 flex items-center justify-center shrink-0 shadow-inner">
+                                <i class="fa-solid fa-calendar-days text-xs"></i>
+                            </span>
+                            <span>2 paniers par mois les premier et troisième lundis du mois.</span>
+                        </li>
+                        <li class="club-bio-bullet flex items-center gap-3.5 bg-white/95 backdrop-blur-sm px-4 py-3 rounded-2xl shadow-sm border border-emerald-100 text-sm text-gray-700 transition hover:translate-x-1 duration-300">
+                            <span class="w-7 h-7 rounded-lg bg-green-100 text-green-700 flex items-center justify-center shrink-0 shadow-inner">
+                                <i class="fa-solid fa-mobile-screen-button text-xs"></i>
+                            </span>
+                            <span>Pas de réservation nécessaire, recevez un SMS de confirmation 48h à l'avance.</span>
+                        </li>
+                        <li class="club-bio-bullet flex items-center gap-3.5 bg-white/95 backdrop-blur-sm px-4 py-3 rounded-2xl shadow-sm border border-emerald-100 text-sm text-gray-700 transition hover:translate-x-1 duration-300">
+                            <span class="w-7 h-7 rounded-lg bg-green-100 text-green-700 flex items-center justify-center shrink-0 shadow-inner">
+                                <i class="fa-solid fa-umbrella-beach text-xs"></i>
+                            </span>
+                            <span>Un empêchement, un départ en vacances ? Reportez votre livraison.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                
+                <!-- Formule Petite Saison -->
+                <div class="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-gray-200 flex flex-col justify-between relative reveal hover:shadow-2xl transition">
+                    <div class="bg-green-800 text-white text-xs font-bold text-center py-1.5 uppercase tracking-wider">Engagement 3 mois</div>
+                    
+                    <div class="bg-gray-900 flex items-center justify-center relative w-full h-48 overflow-hidden">
+                        <img src="Image/petite_saison.jpg" alt="Formule Petite Saison" class="w-full h-full object-cover block">
+                    </div>
+
+                    <div class="p-6 space-y-4 flex-1 flex flex-col justify-between">
+                        <div>
+                            <span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Trimestriel</span>
+                            <h3 class="text-2xl font-bold text-gray-900 mt-2">Formule Petite Saison</h3>
+                            <p class="text-gray-600 text-xs mt-1">Optez pour 3 mois de sérénité, vos fruits et légumes bio chez vous sans même y penser. Une seule chose : régalez-vous !</p>
+                            
+                            <ul class="space-y-2.5 text-xs text-gray-700 font-medium bg-green-50/50 p-4 rounded-xl border border-green-100 mt-4">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-star text-green-600"></i> 6 Paniers au total</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-star text-green-600"></i> 1 report possible</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-star text-green-600"></i> 30 € d'économie</li>
+                            </ul>
+                        </div>
+
+                        <div class="pt-4 flex items-baseline justify-between border-t border-gray-100">
+                            <span class="text-sm font-semibold text-gray-500">Tarif trimestriel :</span>
+                            <div class="text-3xl font-extrabold text-green-700">210 €</div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-gray-50 border-t border-gray-100">
+                        <a href="#commande" onclick="selectFormule('abo_trimestriel')" class="block text-center bg-green-600 text-white text-sm font-medium py-3 rounded-lg hover:bg-green-700 transition shadow">Rejoindre la formule Petite Saison</a>
+                    </div>
+                </div>
+
+                <!-- Formule Grande Saison -->
+                <div class="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border-2 border-emerald-600 flex flex-col justify-between relative reveal hover:shadow-2xl transition">
+                    <div class="bg-emerald-600 text-white text-xs font-bold text-center py-1.5 uppercase tracking-wider">Engagement 6 mois (Maximum d'avantages)</div>
+                    
+                    <div class="bg-gray-900 flex items-center justify-center relative w-full h-48 overflow-hidden">
+                        <img src="Image/grande_saison.jpg" alt="Formule Grande Saison" class="w-full h-full object-cover block">
+                    </div>
+
+                    <div class="p-6 space-y-4 flex-1 flex flex-col justify-between">
+                        <div>
+                            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Semestriel</span>
+                            <h3 class="text-2xl font-bold text-gray-900 mt-2">Formule Grande Saison</h3>
+                            <p class="text-gray-600 text-xs mt-1">Le confort optimal pendant 6 mois. Lancez votre routine, vos idées recettes, prenez soin de vous et de votre foyer. Le plaisir et la santé n'ont pas de prix.</p>
+                            
+                            <ul class="space-y-2.5 text-xs text-gray-700 font-medium bg-emerald-50/50 p-4 rounded-xl border border-emerald-200 mt-4">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-crown text-emerald-600"></i> 12 Paniers au total</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-crown text-emerald-600"></i> 3 reports possibles</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-crown text-emerald-600"></i> 60 € d'économie</li>
+                            </ul>
+                        </div>
+
+                        <div class="pt-4 flex items-baseline justify-between border-t border-gray-100">
+                            <span class="text-sm font-semibold text-gray-500">Tarif semestriel :</span>
+                            <div class="text-3xl font-extrabold text-green-700">420 €</div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-gray-50 border-t border-gray-100">
+                        <a href="#commande" onclick="selectFormule('abo_semestriel')" class="block text-center bg-emerald-600 text-white text-sm font-medium py-3 rounded-lg hover:bg-emerald-700 transition shadow">Rejoindre la formule Grande Saison</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION : VOTRE PANIER SUR-MESURE (ÉTALAGE VIGNETTES) -->
+    <section id="panier-sur-mesure" class="py-20 px-4 max-w-7xl mx-auto scroll-mt-28">
+        <div class="text-center space-y-4 mb-12 reveal">
+            <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Personnalisation</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-green-900">Notre Étalage Bio</h2>
+            <p class="text-gray-600 max-w-xl mx-auto">Choisissez vos fruits et légumes pour composer votre panier sur-mesure ou compléter votre commande.</p>
+        </div>
+
+        <!-- Grille de vignettes : 4 colonnes horizontal -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+            
+            <!-- Vignette 1 : Tomates anciennes -->
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between reveal group hover:shadow-xl transition" id="vignette-1">
+                <div class="relative h-48 overflow-hidden bg-gray-100">
+                    <img src="Image/tomate_ancienne.jpg" alt="Tomates anciennes" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-4 space-y-3">
+                    <div class="flex justify-between items-baseline">
+                        <h3 class="font-bold text-gray-900 text-base" data-name="Tomates anciennes">Tomates anciennes</h3>
+                        <span class="text-sm font-extrabold text-green-700" data-price="7.50">7,50 € / kg</span>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité (kg) :</label>
+                        <select onchange="updateSurMesureSummary()" class="sur-mesure-select w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 text-sm focus:outline-none focus:border-green-600">
+                            <option value="0" selected>0 kg</option>
+                            <option value="0.5">500 gr</option>
+                            <option value="1">1 kg</option>
+                            <option value="2">2 kg</option>
+                            <option value="3">3 kg</option>
+                            <option value="4">4 kg</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vignette 2 : Pomme de terre -->
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between reveal group hover:shadow-xl transition" id="vignette-2">
+                <div class="relative h-48 overflow-hidden bg-gray-100">
+                    <img src="Image/pomme_de_terre.jpg" alt="Pommes de terre" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-4 space-y-3">
+                    <div class="flex justify-between items-baseline">
+                        <h3 class="font-bold text-gray-900 text-base" data-name="Pomme de terre">Pommes de terre</h3>
+                        <span class="text-sm font-extrabold text-green-700" data-price="4.95">4,95 € / kg</span>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité (kg) :</label>
+                        <select onchange="updateSurMesureSummary()" class="sur-mesure-select w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 text-sm focus:outline-none focus:border-green-600">
+                            <option value="0" selected>0 kg</option>
+                            <option value="0.5">500 gr</option>
+                            <option value="1">1 kg</option>
+                            <option value="2">2 kg</option>
+                            <option value="3">3 kg</option>
+                            <option value="4">4 kg</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vignette 5 : Courgette -->
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between reveal group hover:shadow-xl transition" id="vignette-5">
+                <div class="relative h-48 overflow-hidden bg-gray-100">
+                    <img src="Image/courgettes.jpg" alt="Courgettes du jardin" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-4 space-y-3">
+                    <div class="flex justify-between items-baseline">
+                        <h3 class="font-bold text-gray-900 text-base" data-name="Courgettes du jardin">Courgettes du jardin</h3>
+                        <span class="text-sm font-extrabold text-green-700" data-price="5.50">5,50 € / kg</span>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité (kg) :</label>
+                        <select onchange="updateSurMesureSummary()" class="sur-mesure-select w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 text-sm focus:outline-none focus:border-green-600">
+                            <option value="0" selected>0 kg</option>
+                            <option value="0.5">500 gr</option>
+                            <option value="1">1 kg</option>
+                            <option value="2">2 kg</option>
+                            <option value="3">3 kg</option>
+                            <option value="4">4 kg</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vignette 8 : Radis -->
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between reveal group hover:shadow-xl transition" id="vignette-8">
+                <div class="relative h-48 overflow-hidden bg-gray-100">
+                    <img src="Image/radis.jpg" alt="Radis croquants" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-4 space-y-3">
+                    <div class="flex justify-between items-baseline">
+                        <h3 class="font-bold text-gray-900 text-base" data-name="Radis croquants">Radis croquants</h3>
+                        <span class="text-sm font-extrabold text-green-700" data-price="4.00">4,00 € / botte</span>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité (botte) :</label>
+                        <select onchange="updateSurMesureSummary()" class="sur-mesure-select w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 text-sm focus:outline-none focus:border-green-600">
+                            <option value="0" selected>0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vignette 9 : Citron -->
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between reveal group hover:shadow-xl transition" id="vignette-9">
+                <div class="relative h-48 overflow-hidden bg-gray-100">
+                    <img src="Image/citron.jpg" alt="Citrons bio" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-4 space-y-3">
+                    <div class="flex justify-between items-baseline">
+                        <h3 class="font-bold text-gray-900 text-base" data-name="Citrons bio">Citrons bio</h3>
+                        <span class="text-sm font-extrabold text-green-700" data-price="2.50">2,50 € / kg</span>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité (kg) :</label>
+                        <select onchange="updateSurMesureSummary()" class="sur-mesure-select w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 text-sm focus:outline-none focus:border-green-600">
+                            <option value="0" selected>0 kg</option>
+                            <option value="0.5">500 gr</option>
+                            <option value="1">1 kg</option>
+                            <option value="2">2 kg</option>
+                            <option value="3">3 kg</option>
+                            <option value="4">4 kg</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vignette 11 : Betterave -->
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between reveal group hover:shadow-xl transition" id="vignette-11">
+                <div class="relative h-48 overflow-hidden bg-gray-100">
+                    <img src="Image/betterave.jpg" alt="Betteraves fraîches" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-4 space-y-3">
+                    <div class="flex justify-between items-baseline">
+                        <h3 class="font-bold text-gray-900 text-base" data-name="Betteraves fraîches">Betteraves fraîches</h3>
+                        <span class="text-sm font-extrabold text-green-700" data-price="3.80">3,80 € / kg</span>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité (kg) :</label>
+                        <select onchange="updateSurMesureSummary()" class="sur-mesure-select w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 text-sm focus:outline-none focus:border-green-600">
+                            <option value="0" selected>0 kg</option>
+                            <option value="0.5">500 gr</option>
+                            <option value="1">1 kg</option>
+                            <option value="2">2 kg</option>
+                            <option value="3">3 kg</option>
+                            <option value="4">4 kg</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vignette : Haricots verts -->
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between reveal group hover:shadow-xl transition" id="vignette-haricots-verts">
+                <div class="relative h-48 overflow-hidden bg-gray-100">
+                    <img src="Image/haricot_vert.jpg" alt="Haricots verts" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-4 space-y-3">
+                    <div class="flex justify-between items-baseline">
+                        <h3 class="font-bold text-gray-900 text-base" data-name="Haricots verts">Haricots verts</h3>
+                        <span class="text-sm font-extrabold text-green-700" data-price="6.50">6,50 € / kg</span>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité (kg) :</label>
+                        <select onchange="updateSurMesureSummary()" class="sur-mesure-select w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 text-sm focus:outline-none focus:border-green-600">
+                            <option value="0" selected>0 kg</option>
+                            <option value="0.5">500 gr</option>
+                            <option value="1">1 kg</option>
+                            <option value="2">2 kg</option>
+                            <option value="3">3 kg</option>
+                            <option value="4">4 kg</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vignette : Bananes -->
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between reveal group hover:shadow-xl transition" id="vignette-bananes">
+                <div class="relative h-48 overflow-hidden bg-gray-100">
+                    <img src="Image/banane.jpg" alt="Bananes" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-4 space-y-3">
+                    <div class="flex justify-between items-baseline">
+                        <h3 class="font-bold text-gray-900 text-base" data-name="Bananes">Bananes</h3>
+                        <span class="text-sm font-extrabold text-green-700" data-price="3.00">3,00 € / kg</span>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité (kg) :</label>
+                        <select onchange="updateSurMesureSummary()" class="sur-mesure-select w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 text-sm focus:outline-none focus:border-green-600">
+                            <option value="0" selected>0 kg</option>
+                            <option value="0.5">500 gr</option>
+                            <option value="1">1 kg</option>
+                            <option value="2">2 kg</option>
+                            <option value="3">3 kg</option>
+                            <option value="4">4 kg</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vignette : Tomate Cerise -->
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between reveal group hover:shadow-xl transition" id="vignette-tomate-cerise">
+                <div class="relative h-48 overflow-hidden bg-gray-100">
+                    <img src="Image/tomate_cerise.jpg" alt="Tomate Cerise" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-4 space-y-3">
+                    <div class="flex justify-between items-baseline">
+                        <h3 class="font-bold text-gray-900 text-base" data-name="Tomate Cerise">Tomate Cerise</h3>
+                        <span class="text-sm font-extrabold text-green-700" data-price="3.00">3,00 € / pièce</span>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité (barquette 250g) :</label>
+                        <select onchange="updateSurMesureSummary()" class="sur-mesure-select w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 text-sm focus:outline-none focus:border-green-600">
+                            <option value="0" selected>0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vignette : Brèdes -->
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between reveal group hover:shadow-xl transition" id="vignette-bredes">
+                <div class="relative h-48 overflow-hidden bg-gray-100">
+                    <img src="Image/brede.jpg" alt="Brèdes" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-4 space-y-3">
+                    <div class="flex justify-between items-baseline">
+                        <h3 class="font-bold text-gray-900 text-base" data-name="Brèdes">Brèdes</h3>
+                        <span class="text-sm font-extrabold text-green-700" data-price="2.00">2,00 € / botte</span>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité (botte) :</label>
+                        <select onchange="updateSurMesureSummary()" class="sur-mesure-select w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 text-sm focus:outline-none focus:border-green-600">
+                            <option value="0" selected>0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vignette : Salade -->
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between reveal group hover:shadow-xl transition" id="vignette-salade">
+                <div class="relative h-48 overflow-hidden bg-gray-100">
+                    <img src="Image/salade.jpg" alt="Salade" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-4 space-y-3">
+                    <div class="flex justify-between items-baseline">
+                        <h3 class="font-bold text-gray-900 text-base" data-name="Salade">Salade</h3>
+                        <span class="text-sm font-extrabold text-green-700" data-price="2.00">2,00 € / pièce</span>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité (unité) :</label>
+                        <select onchange="updateSurMesureSummary()" class="sur-mesure-select w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 text-sm focus:outline-none focus:border-green-600">
+                            <option value="0" selected>0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vignette : Roquette -->
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between reveal group hover:shadow-xl transition" id="vignette-roquette">
+                <div class="relative h-48 overflow-hidden bg-gray-100">
+                    <img src="Image/roquette.jpg" alt="Roquette" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-4 space-y-3">
+                    <div class="flex justify-between items-baseline">
+                        <h3 class="font-bold text-gray-900 text-base" data-name="Roquette">Roquette</h3>
+                        <span class="text-sm font-extrabold text-green-700" data-price="2.50">2,50 € / pièce</span>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité (pièce) :</label>
+                        <select onchange="updateSurMesureSummary()" class="sur-mesure-select w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 text-sm focus:outline-none focus:border-green-600">
+                            <option value="0" selected>0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Tableau récapitulatif dynamique du panier sur-mesure -->
+        <div class="max-w-4xl mx-auto mt-16 bg-white rounded-2xl shadow-xl overflow-hidden border border-green-200 p-6 reveal">
+            <h3 class="text-xl font-bold text-green-900 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-basket-shopping text-green-600"></i> Récapitulatif de votre sélection sur-mesure
+            </h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-gray-200 text-xs text-gray-500 uppercase">
+                            <th class="py-3 px-4 font-semibold">Produit</th>
+                            <th class="py-3 px-4 font-semibold">Quantité</th>
+                            <th class="py-3 px-4 font-semibold">Prix unitaire</th>
+                            <th class="py-3 px-4 font-semibold text-right">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sur-mesure-summary-body" class="divide-y divide-gray-100 text-sm">
+                        <tr>
+                            <td colspan="4" class="py-4 text-center text-gray-500 italic">Aucun produit sélectionné pour le moment.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-6 pt-4 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div class="text-lg font-bold text-gray-900">
+                    Total produits sur-mesure : <span id="sur-mesure-total-price" class="text-green-700 font-extrabold text-2xl">0,00 €</span>
+                </div>
+                <a href="#commande" onclick="ajouterAuPanierGlobal()" class="bg-green-700 text-white font-bold px-6 py-3 rounded-full shadow-lg hover:bg-green-800 transition text-sm">Ajouter à ma commande globale 🛒</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION PRODUCTEUR -->
+    <section id="producteur" class="py-24 px-4 bg-emerald-50/60 border-y border-emerald-100">
+        <div class="max-w-6xl mx-auto space-y-12">
+            <div class="text-center space-y-4 reveal">
+                <span class="bg-green-200 text-green-900 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Guy Huet, Bruno et Fabrice</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-green-900">Des mains de maîtres pour des paniers d'exception</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-10 items-center bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-emerald-100 reveal">
+                <div class="space-y-6 text-gray-700 leading-relaxed text-base">
+                    <p>
+                        Derrière chaque fruit et légume se cache une histoire de terre, de respect et de passion. Bienvenue au Jardin Bio au 12ème kilomètre, au cœur des hauteurs du Tampon à La Réunion, là où opère la magie de <strong class="text-green-800 font-semibold">Guy Huet</strong>, producteur bio engagé.
+                    </p>
+                    <p>
+                        Chaque matin, dès l'aurore, Guy arpente ses champs avec une énergie contagieuse. Aux côtés de <strong class="text-green-800 font-semibold">Bruno</strong> et <strong class="text-green-800 font-semibold">Fabrice</strong>, ils forment un trio soudé, les mains dans la terre pour faire vivre une <strong class="text-green-800 font-semibold">agriculture biologique exigeante et sincère</strong>.
+                    </p>
+                    
+                    <div class="space-y-4 pt-2">
+                        <div class="bg-amber-50/70 p-4 rounded-xl border border-amber-200/60 flex items-start gap-3">
+                            <i class="fa-solid fa-seedling text-green-600 text-xl mt-1"></i>
+                            <div>
+                                <h3 class="font-bold text-green-900">Pour la nature</h3>
+                                <p class="text-sm text-gray-600">Zéro pesticide de synthèse, zéro engrais chimique. On protège les sols, la biodiversité locale, l'eau et les abeilles.</p>
+                            </div>
+                        </div>
+                        <div class="bg-green-50/70 p-4 rounded-xl border border-green-200/60 flex items-start gap-3">
+                            <i class="fa-solid fa-heart-pulse text-green-600 text-xl mt-1"></i>
+                            <div>
+                                <h3 class="font-bold text-green-900">Pour votre santé</h3>
+                                <p class="text-sm text-gray-600">Des fruits et légumes cueillis à maturité, gorgés de nutriments et de vitamines, sans aucun résidu toxique.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="rounded-2xl overflow-hidden shadow-lg bg-gray-900 flex items-center justify-center border-2 border-emerald-100 w-full">
+                        <img src="https://images.pexels.com/photos/1656663/pexels-photo-1656663.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Radis et carottes frais" class="w-full h-auto object-cover block">
+                    </div>
+                    <p class="text-center italic text-sm text-gray-500">« De la terre réunionnaise à votre assiette, le vrai goût du travail de passionnés. » 🌿✨</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- COMMENT ÇA MARCHE -->
+    <section id="fonctionnement" class="py-20 px-4 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center space-y-4 mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-green-900">Comment ça fonctionne ?</h2>
+                <p class="text-gray-600">Simple, rapide et sans engagement de durée (livraisons les lundis).</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8 text-center">
+                <div class="space-y-4 p-6 bg-amber-50/25 rounded-2xl shadow-sm border border-gray-100 reveal">
+                    <div class="w-16 h-16 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-2xl font-bold mx-auto">1</div>
+                    <h3 class="text-xl font-bold text-gray-900">Commandez en ligne</h3>
+                    <p class="text-gray-600 text-sm">Commandes ouvertes jusqu'au dimanche 12h pour la livraison du lendemain.</p>
+                </div>
+                <div class="space-y-4 p-6 bg-amber-50/25 rounded-2xl shadow-sm border border-gray-100 reveal">
+                    <div class="w-16 h-16 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-2xl font-bold mx-auto">2</div>
+                    <h3 class="text-xl font-bold text-gray-900">Récolte locale</h3>
+                    <p class="text-gray-600 text-sm">Nous préparons votre panier avec des fruits et légumes frais de saison.</p>
+                </div>
+                <div class="space-y-4 p-6 bg-amber-50/25 rounded-2xl shadow-sm border border-gray-100 reveal">
+                    <div class="w-16 h-16 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-2xl font-bold mx-auto">3</div>
+                    <h3 class="text-xl font-bold text-gray-900">Livraison</h3>
+                    <p class="text-gray-600 text-sm">Nous vous livrons directement le lundi choisi chez vous ou au travail.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION COMMANDE -->
+    <section id="commande" class="py-20 px-4 max-w-4xl mx-auto">
+        <div class="bg-green-900 text-white rounded-3xl p-8 md:p-12 shadow-2xl space-y-10 reveal">
+            
+            <div class="text-center space-y-3">
+                <span class="bg-amber-400 text-gray-900 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Espace Commande</span>
+                <h2 class="text-3xl font-bold">Votre Panier Global</h2>
+                <p class="text-green-100 text-sm">Combinez votre formule/panier principal et vos ajouts sur-mesure, puis procédez au paiement sécurisé.</p>
+            </div>
+
+            <form id="checkout-form" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Sélectionnez votre formule ou panier principal *</label>
+                    <select name="formule" id="formule-select" required onchange="updatePrice(); updateSurMesureSummary();" class="w-full px-4 py-3 rounded-lg bg-green-800 border border-green-700 text-white focus:outline-none focus:border-amber-400">
+                        <option value="aucun" data-price="0">-- Aucun (uniquement les produits sur-mesure) --</option>
+                        <option value="panier_unique" data-price="40">Le panier Découverte (1 panier - 40 €)</option>
+                        <option value="formule_5" data-price="190">Votre Carnet de 5 Paniers Bio (190 € - soit 38 €/panier)</option>
+                        <option value="formule_10" data-price="360">Votre Carnet de 10 Paniers Bio (360 € - soit 36 €/panier)</option>
+                        <option value="abo_trimestriel" data-price="210">Club Bio - Formule Petite Saison (210 €)</option>
+                        <option value="abo_semestriel" data-price="420">Club Bio - Formule Grande Saison (420 €)</option>
+                    </select>
+                </div>
+
+                <!-- Récapitulatif dynamique inclus dans le formulaire de commande -->
+                <div class="bg-green-800/60 p-4 rounded-xl border border-green-700 space-y-2 text-sm">
+                    <div class="font-bold text-amber-300 flex items-center justify-between">
+                        <span>Détail de votre panier global :</span>
+                    </div>
+                    <div id="form-summary-details" class="text-xs text-green-100 space-y-1">
+                        <p class="italic">Aucun produit sur-mesure sélectionné (optionnel).</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Nom *</label>
+                        <input type="text" name="nom" id="nom" required class="w-full px-4 py-3 rounded-lg bg-green-800 border border-green-700 text-white placeholder-green-400 focus:outline-none focus:border-amber-400" placeholder="Dupont">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Prénom *</label>
+                        <input type="text" name="prenom" id="prenom" required class="w-full px-4 py-3 rounded-lg bg-green-800 border border-green-700 text-white placeholder-green-400 focus:outline-none focus:border-amber-400" placeholder="Jean">
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Adresse de livraison *</label>
+                        <input type="text" name="adresse" id="adresse" required class="w-full px-4 py-3 rounded-lg bg-green-800 border border-green-700 text-white placeholder-green-400 focus:outline-none focus:border-amber-400" placeholder="Numéro, rue, code postal, ville">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Numéro de téléphone *</label>
+                        <input type="tel" name="telephone" id="telephone" required class="w-full px-4 py-3 rounded-lg bg-green-800 border border-green-700 text-white placeholder-green-400 focus:outline-none focus:border-amber-400" placeholder="0692 00 00 00">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium mb-2" id="delivery-label">Date de la 1ère livraison (seuls les lundis à venir sont disponibles) *</label>
+                    <div class="relative">
+                        <input type="text" name="date_livraison" id="delivery-date" required readonly class="w-full px-4 py-3 rounded-lg bg-green-800 border border-green-700 text-white placeholder-green-300 focus:outline-none focus:border-amber-400 cursor-pointer" placeholder="Cliquez pour choisir un lundi...">
+                        <i class="fa-solid fa-calendar-days absolute right-4 top-1/2 -translate-y-1/2 text-amber-400 text-lg pointer-events-none"></i>
+                    </div>
+                    <p class="text-xs text-amber-300 mt-2 flex items-center gap-1.5">
+                        <span class="inline-block w-3 h-3 bg-green-600 rounded-sm border border-white"></span>
+                        Commandes closes le dimanche à 12h00 pour la livraison du lundi suivant.
+                    </p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium mb-2">Précisions</label>
+                    <textarea name="message" id="message" rows="2" class="w-full px-4 py-3 rounded-lg bg-green-800 border border-green-700 text-white placeholder-green-400 focus:outline-none focus:border-amber-400" placeholder="Instructions pour le livreur..."></textarea>
+                </div>
+
+                <div class="bg-green-800/80 p-5 rounded-2xl border border-green-700 space-y-3">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                        <label class="block text-xs font-bold text-amber-300 uppercase tracking-wider">Montant Total à Régler</label>
+                        <div id="price-display-checkout" class="text-2xl font-extrabold text-amber-400">
+                            0 €
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" id="submit-button" class="w-full bg-amber-400 text-gray-900 font-bold py-3.5 rounded-lg hover:bg-amber-300 transition shadow text-lg">Procéder au paiement sécurisé 💳</button>
+            </form>
+
+            <div class="pt-4 border-t border-green-800 text-gray-300 text-xs italic space-y-2 text-left leading-relaxed">
+                <p>
+                    Annulation et modification : Toute annulation ou modification concernant le jour de livraison doit être faite 48h à l'avance par appel téléphonique au <strong class="text-white font-semibold">0692 31 18 73</strong> (limite le samedi à 9h du matin).<br>
+                    Les livraisons se font le lundi. Les commandes passées après le samedi matin à 9h ne pourront pas être annulées ni remboursées.
+                </p>
+                <p class="font-semibold text-amber-300">
+                    Prise de commande : Dernier délai le dimanche à 12h pour une livraison le lundi (le lendemain).
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION CONTACT -->
+    <section id="contact" class="py-20 px-4 max-w-4xl mx-auto">
+        <div class="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100 space-y-10 reveal">
+            
+            <div class="text-center space-y-3">
+                <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Contact</span>
+                <h2 class="text-3xl font-bold text-gray-900">Vous êtes un professionnel ou avez une question ?</h2>
+                <p class="text-gray-600 text-sm">Envoyez-nous un message pour toute demande d'entreprise ou renseignement général.</p>
+            </div>
+
+            <form action="#" method="POST" class="space-y-6" onsubmit="event.preventDefault(); alert('Votre message a bien été envoyé ! Nous vous répondrons rapidement.');">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nom / Société *</label>
+                        <input type="text" required class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-900 focus:outline-none focus:border-green-600" placeholder="Votre nom ou nom d'entreprise">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                        <input type="email" required class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-900 focus:outline-none focus:border-green-600" placeholder="votre@email.com">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Votre Message *</label>
+                    <textarea rows="4" required class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-900 focus:outline-none focus:border-green-600" placeholder="Ex: Devis pour des corbeilles de fruits hebdomadaires en entreprise..."></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-green-600 text-white font-bold py-3.5 rounded-lg hover:bg-green-700 transition shadow">Envoyer le message</button>
+            </form>
+
+            <div class="pt-8 border-t border-gray-100 space-y-4">
+                <div class="text-center">
+                    <h3 class="text-xl font-bold text-gray-900 mb-1">Notre Localisation</h3>
+                    <p class="text-gray-600 text-sm">Près de la salle des fêtes du 12, 83 Chem. des Petreas, Le Tampon 97430, La Réunion</p>
+                </div>
+                <div class="rounded-2xl overflow-hidden shadow-lg h-72 border border-gray-200">
+                    <iframe 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3711.2588326759715!2d55.5186!3d-21.2825!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x217e21a2c3a3b53f%3A0x805988d40d99317b!2s83%20Chem.%20des%20Petreas%2C%20Le%20Tampon%2097430%2C%20La%20R%C3%A9union!5e0!3m2!1sfr!2sfr!4v1650000000000!5m2!1sfr!2sfr">
+                    </iframe>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-gray-100 py-8 text-center text-sm text-gray-500">
+        <p>&copy; 2026 Soukinpanié avec Le Jardin Bio. Tous droits réservés.</p>
+    </footer>
+
+    <!-- SCRIPT JS -->
+    <script>
+        // Initialisation de Stripe (clé publique configurée directement ou via variable d'environnement)
+        let stripe;
+        const STRIPE_PUBLISHABLE_KEY = "pk_live_51UE4Z5EFKvyRHxbLBw6WF2ZcFsMGWNtvh18bMN4vGq2b2UQWPFx8CC6bjekNwJLtpF4vDFhKYj4NCec8Pqi355U700OoUj1JZj"; // Remplacez par votre clé publique Stripe si nécessaire, ou gérez-la via le backend
+
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof Stripe !== 'undefined') {
+                stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+            }
+            
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuIcon = document.getElementById('menu-icon');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+            
+            const mobileDropdownBtn = document.getElementById('mobile-dropdown-btn');
+            const mobileDropdownContent = document.getElementById('mobile-dropdown-content');
+            const mobileDropdownIcon = document.getElementById('mobile-dropdown-icon');
+
+            if (mobileMenuBtn && mobileMenu && menuIcon) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                    if (mobileMenu.classList.contains('hidden')) {
+                        menuIcon.classList.remove('fa-xmark');
+                        menuIcon.classList.add('fa-bars');
+                    } else {
+                        menuIcon.classList.remove('fa-bars');
+                        menuIcon.classList.add('fa-xmark');
+                    }
+                });
+
+                mobileNavLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                        menuIcon.classList.remove('fa-xmark');
+                        menuIcon.classList.add('fa-bars');
+                    });
+                });
+            }
+
+            if (mobileDropdownBtn && mobileDropdownContent && mobileDropdownIcon) {
+                mobileDropdownBtn.addEventListener('click', function() {
+                    mobileDropdownContent.classList.toggle('hidden');
+                    mobileDropdownIcon.classList.toggle('rotate-180');
+                });
+            }
+
+            const reveals = document.querySelectorAll('.reveal');
+            if (reveals.length > 0) {
+                if ('IntersectionObserver' in window) {
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                entry.target.classList.add('active');
+                            }
+                        });
+                    }, { threshold: 0.1 });
+
+                    reveals.forEach(el => observer.observe(el));
+                } else {
+                    reveals.forEach(el => el.classList.add('active'));
+                }
+            }
+
+            const dateInput = document.getElementById("delivery-date");
+            if (dateInput && typeof flatpickr === 'function') {
+                const now = new Date();
+                let minAllowedDate = new Date(now);
+
+                if (now.getDay() === 0 && now.getHours() >= 12) {
+                    minAllowedDate.setDate(now.getDate() + 8);
+                }
+
+                flatpickr(dateInput, {
+                    locale: "fr",
+                    dateFormat: "Y-m-d",
+                    altInput: true,
+                    altFormat: "l j F Y",
+                    minDate: minAllowedDate,
+                    disable: [
+                        function(date) {
+                            return (date.getDay() !== 1);
+                        }
+                    ],
+                    onDayCreate: function(dObj, dStr, fp, dayElement) {
+                        const dayObj = dayElement.dateObj;
+                        const minThreshold = new Date(minAllowedDate);
+                        minThreshold.setHours(0,0,0,0);
+
+                        if (dayObj.getDay() === 1 && 
+                            dayObj >= minThreshold &&
+                            !dayElement.classList.contains("prevMonthDay") && 
+                            !dayElement.classList.contains("nextMonthDay")) {
+                            dayElement.classList.add("monday-highlight");
+                        }
+                    }
+                });
+            }
+
+            // Gestion de la soumission du formulaire et appel fetch au serveur
+            const checkoutForm = document.getElementById('checkout-form');
+            if (checkoutForm) {
+                checkoutForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const select = document.getElementById('formule-select');
+                    const selectedOption = select.options[select.selectedIndex];
+                    const formuleValue = select.value;
+                    let libelleFormule = formuleValue !== 'aucun' ? selectedOption.text : 'Produits sur-mesure uniquement';
+                    
+                    let montantFormule = formuleValue !== 'aucun' ? parseFloat(selectedOption.getAttribute('data-price')) : 0;
+                    let montantSurMesure = calculateSurMesureTotal();
+                    let fraisLivraison = (formuleValue === 'aucun' && montantSurMesure > 0) ? 10 : 0;
+                    let montantEuros = montantFormule + montantSurMesure + fraisLivraison;
+
+                    if (montantEuros <= 0) {
+                        alert("Veuillez sélectionner au moins une formule ou des produits sur-mesure.");
+                        return;
+                    }
+
+                    const montantTotalCentimes = Math.round(montantEuros * 100);
+                    let detailsSurMesure = getSurMesureDetails();
+                    const formData = new FormData(checkoutForm);
+
+                    const clientData = {
+                        formule: formuleValue,
+                        nom: formData.get('nom') || '',
+                        prenom: formData.get('prenom') || '',
+                        adresse: formData.get('adresse') || '',
+                        telephone: formData.get('telephone') || '',
+                        date: formData.get('date_livraison') || '',
+                        message: formData.get('message') || '',
+                        produitsSurMesure: detailsSurMesure,
+                        montantTotalEuros: montantEuros
+                    };
+                    localStorage.setItem('soukinpanie_client', JSON.stringify(clientData));
+
+                    try {
+                        // Détection automatique de l'URL du backend (local ou Render)
+                        const backendUrl = window.location.hostname.includes('localhost') 
+                            ? window.location.origin 
+                            : 'https://panier-bio.onrender.com';
+
+                        // Modification vers la nouvelle route /create-checkout-session
+                        const response = await fetch(`${backendUrl}/create-checkout-session`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                libellePanier: libelleFormule,
+                                formule: formuleValue,
+                                produitsSurMesure: detailsSurMesure,
+                                nom: formData.get('nom') || '',
+                                prenom: formData.get('prenom') || '',
+                                adresse: formData.get('adresse') || '',
+                                telephone: formData.get('telephone') || '',
+                                date_livraison: formData.get('date_livraison') || '',
+                                message: formData.get('message') || ''
+                            })
+                        });
+
+                        const data = await response.json();
+
+                        if (data.error) {
+                            alert("Erreur : " + data.error);
+                            return;
+                        }
+
+                        // Redirection directe via data.url (ou repli Stripe Checkout)
+                        if (data.url) {
+                            window.location.href = data.url;
+                        } else if (data.id && stripe) {
+                            const result = await stripe.redirectToCheckout({
+                                sessionId: data.id
+                            });
+                            if (result.error) {
+                                alert(result.error.message);
+                            }
+                        } else {
+                            alert("Erreur lors de la création de la session de paiement.");
+                        }
+
+                    } catch (error) {
+                        console.error("Erreur réseau :", error);
+                        alert("Impossible de joindre le serveur de paiement.");
+                    }
+                });
+            }
+
+            updateSurMesureSummary();
+        });
+
+        function selectFormule(formuleValue) {
+            const select = document.getElementById('formule-select');
+            if (select) {
+                select.value = formuleValue;
+                updatePrice();
+                updateSurMesureSummary();
+            }
+        }
+
+        function calculateSurMesureTotal() {
+            const selects = document.querySelectorAll('.sur-mesure-select');
+            let total = 0;
+            selects.forEach(select => {
+                const qty = parseFloat(select.value);
+                if (qty > 0) {
+                    const card = select.closest('.bg-white');
+                    const unitPrice = parseFloat(card.querySelector('.text-green-700').getAttribute('data-price'));
+                    total += qty * unitPrice;
+                }
+            });
+            return total;
+        }
+
+        function getSurMesureDetails() {
+            const selects = document.querySelectorAll('.sur-mesure-select');
+            let produitsChoisis = [];
+            selects.forEach(select => {
+                const quantite = parseFloat(select.value);
+                if (quantite > 0) {
+                    const vignette = select.closest('.bg-white');
+                    const nomProduit = vignette.querySelector('h3').getAttribute('data-name');
+                    const prixUnitaire = parseFloat(vignette.querySelector('.text-green-700').getAttribute('data-price'));
+                    produitsChoisis.push({
+                        nom: nomProduit,
+                        quantite: quantite,
+                        prixUnitaireEuros: prixUnitaire,
+                        totalLigneEuros: quantite * prixUnitaire
+                    });
+                }
+            });
+            return produitsChoisis;
+        }
+
+        function updateSurMesureSummary() {
+            const tbody = document.getElementById('sur-mesure-summary-body');
+            const totalDisplay = document.getElementById('sur-mesure-total-price');
+            const formSummaryDetails = document.getElementById('form-summary-details');
+            
+            if (!tbody || !totalDisplay) return;
+
+            let produits = getSurMesureDetails();
+            let totalSurMesure = calculateSurMesureTotal();
+
+            if (produits.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-gray-500 italic">Aucun produit sélectionné pour le moment.</td></tr>`;
+                totalDisplay.innerText = "0,00 €";
+                if (formSummaryDetails) {
+                    formSummaryDetails.innerHTML = `<p class="italic">Aucun produit sur-mesure sélectionné (optionnel).</p>`;
+                }
+            } else {
+                let html = '';
+                let formHtml = '';
+                produits.forEach(p => {
+                    html += `
+                        <tr class="border-b border-gray-50">
+                            <td class="py-3 px-4 font-medium text-gray-800">${p.nom}</td>
+                            <td class="py-3 px-4 text-gray-600">${p.quantite}</td>
+                            <td class="py-3 px-4 text-gray-600">${p.prixUnitaireEuros.toFixed(2)} €</td>
+                            <td class="py-3 px-4 text-right font-bold text-green-700">${p.totalLigneEuros.toFixed(2)} €</td>
+                        </tr>
+                    `;
+                    formHtml += `<p>• ${p.nom} (${p.quantite}) : <strong>${p.totalLigneEuros.toFixed(2)} €</strong></p>`;
+                });
+                tbody.innerHTML = html;
+                totalDisplay.innerText = totalSurMesure.toFixed(2) + " €";
+                if (formSummaryDetails) {
+                    formSummaryDetails.innerHTML = formHtml;
+                }
+            }
+            updatePrice();
+        }
+
+        function updatePrice() {
+            const select = document.getElementById('formule-select');
+            const priceDisplay = document.getElementById('price-display-checkout');
+            if (!select || !priceDisplay) return;
+
+            const selectedOption = select.options[select.selectedIndex];
+            const formulePrice = select.value !== 'aucun' ? parseFloat(selectedOption.getAttribute('data-price')) : 0;
+            const surMesurePrice = calculateSurMesureTotal();
+            
+            let fraisLivraison = (select.value === 'aucun' && surMesurePrice > 0) ? 10 : 0;
+            let totalGlobal = formulePrice + surMesurePrice + fraisLivraison;
+
+            let texteTotal = totalGlobal.toFixed(2) + " €";
+            if (fraisLivraison > 0) {
+                texteTotal += ` (incluant ${fraisLivraison} € de frais de livraison)`;
+            }
+            priceDisplay.innerText = texteTotal;
+        }
+
+        function ajouterAuPanierGlobal() {
+            const commandeSection = document.getElementById('commande');
+            if (commandeSection) {
+                commandeSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    </script>
+</body>
+</html>
