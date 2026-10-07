@@ -1,10 +1,33 @@
 require('dotenv').config();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-console.log("Serveur démarré sur le port 3000");
 const express = require('express');
 const app = express();
-const fs = require('fs');
 const cors = require('cors'); // Gère les requêtes cross-origin entre le front et le back
+const mongoose = require('mongoose');
+
+// Connexion à MongoDB Atlas
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log("Connecté à MongoDB Atlas avec succès"))
+    .catch(err => console.error("Erreur de connexion MongoDB :", err));
+
+// Définition du schéma et du modèle Mongoose pour les commandes
+const commandeSchema = new mongoose.Schema({
+    idSession: String,
+    client: {
+        nom: String,
+        prenom: String,
+        adresse: String,
+        telephone: String
+    },
+    formule: String,
+    produitsSurMesure: Array,
+    dateLivraison: String,
+    message: String,
+    montantTotal: String,
+    datePaiement: { type: Date, default: Date.now }
+});
+
+const Commande = mongoose.model('Commande', commandeSchema);
 
 // Grille tarifaire sécurisée stockée côté serveur
 const GRILLE_TARIFAIRE = {
@@ -220,34 +243,27 @@ app.post('/webhook', async (req, res) => {
             console.error("Erreur lors du parsing des produits sur-mesure des métadonnées :", errParse);
         }
 
-        // Traitement de la commande validée
-        const nouvelleCommande = {
-            idSession: session.id,
-            client: {
-                nom: session.metadata.nom,
-                prenom: session.metadata.prenom,
-                adresse: session.metadata.adresse,
-                telephone: session.metadata.telephone
-            },
-            formule: session.metadata.formule,
-            produitsSurMesure: produitsSurMesureParses,
-            dateLivraison: session.metadata.date_livraison,
-            message: session.metadata.message,
-            montantTotal: session.metadata.montantTotalEuros,
-            datePaiement: new Date().toISOString()
-        };
-
-        // Sauvegarde sécurisée dans commandes.json si besoin
+        // Enregistrement sécurisé de la commande dans MongoDB Atlas
         try {
-            let commandes = [];
-            if (fs.existsSync('commandes.json')) {
-                const fichier = fs.readFileSync('commandes.json', 'utf8');
-                commandes = JSON.parse(fichier);
-            }
-            commandes.push(nouvelleCommande);
-            fs.writeFileSync('commandes.json', JSON.stringify(commandes, null, 2));
+            const nouvelleCommande = new Commande({
+                idSession: session.id,
+                client: {
+                    nom: session.metadata.nom,
+                    prenom: session.metadata.prenom,
+                    adresse: session.metadata.adresse,
+                    telephone: session.metadata.telephone
+                },
+                formule: session.metadata.formule,
+                produitsSurMesure: produitsSurMesureParses,
+                dateLivraison: session.metadata.date_livraison,
+                message: session.metadata.message,
+                montantTotal: session.metadata.montantTotalEuros
+            });
+
+            await nouvelleCommande.save();
+            console.log("Commande enregistrée dans MongoDB avec succès !");
         } catch (e) {
-            console.error("Erreur lors de l'enregistrement de la commande :", e);
+            console.error("Erreur lors de l'enregistrement de la commande dans MongoDB :", e);
         }
     }
 

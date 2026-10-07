@@ -1,3 +1,0 @@
-.env
-node_modules/
-commandes.json
