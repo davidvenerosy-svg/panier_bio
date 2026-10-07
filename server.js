@@ -52,7 +52,7 @@ app.use((req, res, next) => {
     }
 });
 
-// MODIFICATION : Utilisation de __dirname pour servir les fichiers statiques depuis la racine du projet
+// Utilisation de __dirname pour servir les fichiers statiques depuis la racine du projet
 app.use(express.static(__dirname));
 
 // Route pour fournir la clé publique Stripe au front-end
@@ -76,10 +76,7 @@ app.post('/create-checkout-session', async (req, res) => {
             message 
         } = req.body;
 
-        // Tableau dynamique qui contiendra les éléments détaillés pour Stripe
         let lineItems = [];
-
-        // 1. Validation et ajout de la formule principale dans les line_items
         let montantFormule = 0;
 
         if (formule && GRILLE_TARIFAIRE[formule]) {
@@ -102,7 +99,6 @@ app.post('/create-checkout-session', async (req, res) => {
             return res.status(400).json({ error: "Formule invalide." });
         }
 
-        // 2. Validation et ajout sécurisé de chaque produit sur-mesure dans les line_items
         let montantSurMesure = 0;
         let produitsValides = [];
 
@@ -123,7 +119,6 @@ app.post('/create-checkout-session', async (req, res) => {
                         totalLigneEuros: totalLigne
                     });
 
-                    // Ajout de chaque produit sur-mesure en tant que ligne distincte sur Stripe
                     lineItems.push({
                         price_data: {
                             currency: 'eur',
@@ -138,7 +133,6 @@ app.post('/create-checkout-session', async (req, res) => {
             }
         }
 
-        // 3. Application sécurisée et explicite des frais de livraison (10€ si uniquement du sur-mesure ou pas de formule principale)
         let fraisLivraison = ((!formule || formule === 'aucun') && montantSurMesure > 0) ? 10 : 0;
 
         if (fraisLivraison > 0) {
@@ -154,14 +148,12 @@ app.post('/create-checkout-session', async (req, res) => {
             });
         }
 
-        // 4. Calcul du montant total final en euros et centimes
         let montantTotalEuros = montantFormule + montantSurMesure + fraisLivraison;
 
         if (montantTotalEuros <= 0 || lineItems.length === 0) {
             return res.status(400).json({ error: "Le montant total de la commande doit être supérieur à 0." });
         }
 
-        // Stockage des informations dans les métadonnées de Stripe (limité à 500 caractères par valeur)
         const produitsSurMesureString = JSON.stringify(produitsValides);
         
         const metadataPayload = {
@@ -213,3 +205,42 @@ app.post('/webhook', async (req, res) => {
 
     if (event.type === 'checkout.session.completed') {
         const session = event.data.object;
+        
+        // Traitement de la commande validée
+        const nouvelleCommande = {
+            idSession: session.id,
+            client: {
+                nom: session.metadata.nom,
+                prenom: session.metadata.prenom,
+                adresse: session.metadata.adresse,
+                telephone: session.metadata.telephone
+            },
+            formule: session.metadata.formule,
+            dateLivraison: session.metadata.date_livraison,
+            message: session.metadata.message,
+            montantTotal: session.metadata.montantTotalEuros,
+            datePaiement: new Date().toISOString()
+        };
+
+        // Sauvegarde sécurisée dans commandes.json si besoin
+        try {
+            let commandes = [];
+            if (fs.existsSync('commandes.json')) {
+                const fichier = fs.readFileSync('commandes.json', 'utf8');
+                commandes = JSON.parse(fichier);
+            }
+            commandes.push(nouvelleCommande);
+            fs.writeFileSync('commandes.json', JSON.stringify(commandes, null, 2));
+        } catch (e) {
+            console.error("Erreur lors de l'enregistrement de la commande :", e);
+        }
+    }
+
+    res.status(200).json({ received: true });
+});
+
+// Lancement du serveur
+const PORT = process.env.PORT || 4242;
+app.listen(PORT, () => {
+    console.log(`Serveur démarré sur le port ${PORT}`);
+});
