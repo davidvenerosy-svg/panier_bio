@@ -33,7 +33,7 @@ const GRILLE_TARIFAIRE = {
     'panier_unique': { nom: 'Le panier Découverte', prix: 40 },
     'formule_3': { nom: 'Votre Carnet de 3 Paniers Bio', prix: 120 },
     'formule_5': { nom: 'Votre Carnet de 5 Paniers Bio', prix: 200 },
-    'abo_trimestriel': { nom: 'Club Bio - Formule Petite Saison', prix: 210 },
+    'abo_trimestriel': { nom: 'Club Bio - Formule Petite Saison', prix: 240 },
     'aucun': { nom: 'Produits sur-mesure uniquement', prix: 0 }
 };
 
