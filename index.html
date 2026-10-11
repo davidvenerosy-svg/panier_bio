@@ -9,7 +9,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Google Fonts pour la police cursive -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
@@ -19,10 +19,9 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
 
-    <!-- SDK Stripe.js pour la redirection vers Checkout -->
+    <!-- SDK Stripe.js -->
     <script src="https://js.stripe.com/v3/"></script>
 
-    <!-- Styles CSS spécifiques -->
     <style>
         .reveal {
             opacity: 0;
@@ -206,66 +205,66 @@
         <div class="text-center space-y-4 mb-16 reveal">
             <span class="bg-amber-100 text-amber-900 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Formules Flexibles</span>
             <h2 class="text-3xl md:text-4xl font-bold text-green-900">Votre carnet</h2>
-            <p class="text-gray-600 max-w-xl mx-auto">Avec votre carnet de 5 ou 10 paniers, commandez en fonction de vos besoins et de vos envies.</p>
+            <p class="text-gray-600 max-w-xl mx-auto">Avec votre carnet de 3 ou 5 paniers, commandez en fonction de vos besoins et de vos envies.</p>
         </div>
 
         <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             
-            <!-- Carnet 5 Paniers -->
+            <!-- Carnet 3 Paniers -->
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-green-600 flex flex-col justify-between relative reveal hover:shadow-2xl transition">
-                <div class="bg-amber-400 text-gray-900 text-xs font-bold text-center py-1.5 uppercase tracking-wider">Formule 5 paniers</div>
+                <div class="bg-amber-400 text-gray-900 text-xs font-bold text-center py-1.5 uppercase tracking-wider">Formule 3 paniers</div>
+                <div class="bg-gray-900 flex items-center justify-center relative w-full overflow-hidden">
+                    <img src="https://lh3.googleusercontent.com/d/1_6UbqHXgGvjPQBOOhnff6Q13k5v5NGX5" alt="Carnet 3 paniers" class="w-full h-auto object-cover block">
+                </div>
+
+                <div class="p-6 space-y-4 flex-1 flex flex-col justify-between">
+                    <div>
+                        <span class="bg-green-100 text-green-900 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Votre Carnet de 3 Paniers Bio</span>
+                        <p class="text-gray-600 text-xs mt-3">3 paniers à commander quand vous voulez. Valable 2 mois à compter de la première commande.</p>
+                        
+                        <ul class="space-y-2 text-xs text-gray-700 font-medium bg-green-50/50 p-4 rounded-xl border border-green-200 mt-4">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-green-600"></i> 3 livraisons à votre rythme</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-green-600"></i> 40 € le panier</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-green-600"></i> Valable 2 mois</li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-4 flex items-baseline justify-between border-t border-gray-100">
+                        <span class="text-sm font-semibold text-gray-500">Total du carnet :</span>
+                        <div class="text-3xl font-extrabold text-green-700">120 € <span class="text-xs font-normal text-gray-500">(40 €/u)</span></div>
+                    </div>
+                </div>
+                <div class="p-4 bg-gray-50 border-t border-gray-100">
+                    <a href="#commande" onclick="selectFormule('formule_3')" class="block text-center bg-green-600 text-white text-sm font-medium py-3 rounded-lg hover:bg-green-700 transition shadow">Choisir le carnet de 3</a>
+                </div>
+            </div>
+
+            <!-- Carnet 5 Paniers -->
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-amber-500 flex flex-col justify-between relative reveal hover:shadow-2xl transition">
+                <div class="bg-green-700 text-white text-xs font-bold text-center py-1.5 uppercase tracking-wider">Formule 5 paniers (Meilleure offre)</div>
                 <div class="bg-gray-900 flex items-center justify-center relative w-full overflow-hidden">
                     <img src="https://lh3.googleusercontent.com/d/1_6UbqHXgGvjPQBOOhnff6Q13k5v5NGX5" alt="Carnet 5 paniers" class="w-full h-auto object-cover block">
                 </div>
 
                 <div class="p-6 space-y-4 flex-1 flex flex-col justify-between">
                     <div>
-                        <span class="bg-green-100 text-green-900 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Votre Carnet de 5 Paniers Bio</span>
+                        <span class="bg-amber-100 text-amber-900 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Votre Carnet de 5 Paniers Bio</span>
                         <p class="text-gray-600 text-xs mt-3">5 paniers à commander quand vous voulez. Valable 3 mois à compter de la première commande.</p>
                         
-                        <ul class="space-y-2 text-xs text-gray-700 font-medium bg-green-50/50 p-4 rounded-xl border border-green-200 mt-4">
-                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-green-600"></i> 5 livraisons à votre rythme</li>
-                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-green-600"></i> 38 € le panier au lieu de 40 €</li>
-                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-green-600"></i> Valable 3 mois</li>
-                        </ul>
-                    </div>
-
-                    <div class="pt-4 flex items-baseline justify-between border-t border-gray-100">
-                        <span class="text-sm font-semibold text-gray-500">Total du carnet :</span>
-                        <div class="text-3xl font-extrabold text-green-700">190 € <span class="text-xs font-normal text-gray-500">(38 €/u)</span></div>
-                    </div>
-                </div>
-                <div class="p-4 bg-gray-50 border-t border-gray-100">
-                    <a href="#commande" onclick="selectFormule('formule_5')" class="block text-center bg-green-600 text-white text-sm font-medium py-3 rounded-lg hover:bg-green-700 transition shadow">Choisir le carnet de 5</a>
-                </div>
-            </div>
-
-            <!-- Carnet 10 Paniers -->
-            <div class="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-amber-500 flex flex-col justify-between relative reveal hover:shadow-2xl transition">
-                <div class="bg-green-700 text-white text-xs font-bold text-center py-1.5 uppercase tracking-wider">Formule 10 paniers (Meilleure offre)</div>
-                <div class="bg-gray-900 flex items-center justify-center relative w-full overflow-hidden">
-                    <img src="https://lh3.googleusercontent.com/d/1_6UbqHXgGvjPQBOOhnff6Q13k5v5NGX5" alt="Carnet 10 paniers" class="w-full h-auto object-cover block">
-                </div>
-
-                <div class="p-6 space-y-4 flex-1 flex flex-col justify-between">
-                    <div>
-                        <span class="bg-amber-100 text-amber-900 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Votre Carnet de 10 Paniers Bio</span>
-                        <p class="text-gray-600 text-xs mt-3">10 paniers à commander quand vous voulez. Valable 6 mois à compter de la première commande.</p>
-                        
                         <ul class="space-y-2 text-xs text-gray-700 font-medium bg-amber-50/50 p-4 rounded-xl border border-amber-200 mt-4">
-                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-600"></i> 10 livraisons à votre rythme</li>
-                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-600"></i> 36 € le panier au lieu de 40 €</li>
-                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-600"></i> Valable 6 mois</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-600"></i> 5 livraisons à votre rythme</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-600"></i> 40 € le panier</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-600"></i> Valable 3 mois</li>
                         </ul>
                     </div>
 
                     <div class="pt-4 flex items-baseline justify-between border-t border-gray-100">
                         <span class="text-sm font-semibold text-gray-500">Total du carnet :</span>
-                        <div class="text-3xl font-extrabold text-green-700">360 € <span class="text-xs font-normal text-gray-500">(36 €/u)</span></div>
+                        <div class="text-3xl font-extrabold text-green-700">200 € <span class="text-xs font-normal text-gray-500">(40 €/u)</span></div>
                     </div>
                 </div>
                 <div class="p-4 bg-gray-50 border-t border-gray-100">
-                    <a href="#commande" onclick="selectFormule('formule_10')" class="block text-center bg-amber-500 text-gray-900 font-bold text-sm py-3 rounded-lg hover:bg-amber-400 transition shadow">Choisir le carnet de 10</a>
+                    <a href="#commande" onclick="selectFormule('formule_5')" class="block text-center bg-amber-500 text-gray-900 font-bold text-sm py-3 rounded-lg hover:bg-amber-400 transition shadow">Choisir le carnet de 5</a>
                 </div>
             </div>
 
@@ -277,7 +276,7 @@
         <div class="absolute inset-0 z-0 bg-gradient-to-br from-emerald-100/70 via-green-50/60 to-teal-100/50 pointer-events-none"></div>
 
         <div class="absolute inset-0 z-0 opacity-10">
-            <img src="https://images.unsplash.com/photo-1595974482597-4f6c4f705517?auto=format&fit=crop&w=1920&q=80" alt="Gens travaillant dans un maraîcher" class="w-full h-full object-cover">
+            <img src="https://images.unsplash.com/photo-1595974482597-4f6c4f705517?auto=format&fit=crop&w=1920&q=80" alt="Maraîcher" class="w-full h-full object-cover">
         </div>
 
         <div class="relative z-10 max-w-7xl mx-auto">
@@ -317,8 +316,7 @@
                 </div>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                
+            <div class="max-w-md mx-auto">
                 <!-- Formule Petite Saison -->
                 <div class="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-gray-200 flex flex-col justify-between relative reveal hover:shadow-2xl transition">
                     <div class="bg-green-800 text-white text-xs font-bold text-center py-1.5 uppercase tracking-wider">Engagement 3 mois</div>
@@ -349,43 +347,11 @@
                         <a href="#commande" onclick="selectFormule('abo_trimestriel')" class="block text-center bg-green-600 text-white text-sm font-medium py-3 rounded-lg hover:bg-green-700 transition shadow">Rejoindre la formule Petite Saison</a>
                     </div>
                 </div>
-
-                <!-- Formule Grande Saison -->
-                <div class="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border-2 border-emerald-600 flex flex-col justify-between relative reveal hover:shadow-2xl transition">
-                    <div class="bg-emerald-600 text-white text-xs font-bold text-center py-1.5 uppercase tracking-wider">Engagement 6 mois (Maximum d'avantages)</div>
-                    
-                    <div class="bg-gray-900 flex items-center justify-center relative w-full h-48 overflow-hidden">
-                        <img src="Image/grande_saison.jpg" alt="Formule Grande Saison" class="w-full h-full object-cover block">
-                    </div>
-
-                    <div class="p-6 space-y-4 flex-1 flex flex-col justify-between">
-                        <div>
-                            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Semestriel</span>
-                            <h3 class="text-2xl font-bold text-gray-900 mt-2">Formule Grande Saison</h3>
-                            <p class="text-gray-600 text-xs mt-1">Le confort optimal pendant 6 mois. Lancez votre routine, vos idées recettes, prenez soin de vous et de votre foyer. Le plaisir et la santé n'ont pas de prix.</p>
-                            
-                            <ul class="space-y-2.5 text-xs text-gray-700 font-medium bg-emerald-50/50 p-4 rounded-xl border border-emerald-200 mt-4">
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-crown text-emerald-600"></i> 12 Paniers au total</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-crown text-emerald-600"></i> 3 reports possibles</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-crown text-emerald-600"></i> 60 € d'économie</li>
-                            </ul>
-                        </div>
-
-                        <div class="pt-4 flex items-baseline justify-between border-t border-gray-100">
-                            <span class="text-sm font-semibold text-gray-500">Tarif semestriel :</span>
-                            <div class="text-3xl font-extrabold text-green-700">420 €</div>
-                        </div>
-                    </div>
-                    <div class="p-4 bg-gray-50 border-t border-gray-100">
-                        <a href="#commande" onclick="selectFormule('abo_semestriel')" class="block text-center bg-emerald-600 text-white text-sm font-medium py-3 rounded-lg hover:bg-emerald-700 transition shadow">Rejoindre la formule Grande Saison</a>
-                    </div>
-                </div>
-
             </div>
         </div>
     </section>
 
-    <!-- SECTION : VOTRE PANIER SUR-MESURE (ÉTALAGE VIGNETTES) -->
+    <!-- SECTION : VOTRE PANIER SUR-MESURE -->
     <section id="panier-sur-mesure" class="py-20 px-4 max-w-7xl mx-auto scroll-mt-28">
         <div class="text-center space-y-4 mb-12 reveal">
             <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Personnalisation</span>
@@ -393,7 +359,6 @@
             <p class="text-gray-600 max-w-xl mx-auto">Choisissez vos fruits et légumes pour composer votre panier sur-mesure ou compléter votre commande.</p>
         </div>
 
-        <!-- Grille de vignettes : 4 colonnes horizontal -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
             
             <!-- Vignette 1 : Tomates anciennes -->
@@ -407,14 +372,14 @@
                         <span class="text-sm font-extrabold text-green-700" data-price="7.50">7,50 € / kg</span>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité (kg) :</label>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité :</label>
                         <select onchange="updateSurMesureSummary()" class="sur-mesure-select w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 text-sm focus:outline-none focus:border-green-600">
-                            <option value="0" selected>0 kg</option>
-                            <option value="0.5">500 gr</option>
-                            <option value="1">1 kg</option>
-                            <option value="2">2 kg</option>
-                            <option value="3">3 kg</option>
-                            <option value="4">4 kg</option>
+                            <option value="0" selected>0</option>
+                            <option value="500">500 g (3,75 €)</option>
+                            <option value="1000">1 kg</option>
+                            <option value="2000">2 kg</option>
+                            <option value="3000">3 kg</option>
+                            <option value="4000">4 kg</option>
                         </select>
                     </div>
                 </div>
@@ -431,14 +396,14 @@
                         <span class="text-sm font-extrabold text-green-700" data-price="4.95">4,95 € / kg</span>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité (kg) :</label>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité :</label>
                         <select onchange="updateSurMesureSummary()" class="sur-mesure-select w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 text-sm focus:outline-none focus:border-green-600">
-                            <option value="0" selected>0 kg</option>
-                            <option value="0.5">500 gr</option>
-                            <option value="1">1 kg</option>
-                            <option value="2">2 kg</option>
-                            <option value="3">3 kg</option>
-                            <option value="4">4 kg</option>
+                            <option value="0" selected>0</option>
+                            <option value="500">500 g</option>
+                            <option value="1000">1 kg</option>
+                            <option value="2000">2 kg</option>
+                            <option value="3000">3 kg</option>
+                            <option value="4000">4 kg</option>
                         </select>
                     </div>
                 </div>
@@ -455,14 +420,14 @@
                         <span class="text-sm font-extrabold text-green-700" data-price="5.50">5,50 € / kg</span>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité (kg) :</label>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité :</label>
                         <select onchange="updateSurMesureSummary()" class="sur-mesure-select w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 text-sm focus:outline-none focus:border-green-600">
-                            <option value="0" selected>0 kg</option>
-                            <option value="0.5">500 gr</option>
-                            <option value="1">1 kg</option>
-                            <option value="2">2 kg</option>
-                            <option value="3">3 kg</option>
-                            <option value="4">4 kg</option>
+                            <option value="0" selected>0</option>
+                            <option value="500">500 g</option>
+                            <option value="1000">1 kg</option>
+                            <option value="2000">2 kg</option>
+                            <option value="3000">3 kg</option>
+                            <option value="4000">4 kg</option>
                         </select>
                     </div>
                 </div>
@@ -502,14 +467,14 @@
                         <span class="text-sm font-extrabold text-green-700" data-price="2.50">2,50 € / kg</span>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité (kg) :</label>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité :</label>
                         <select onchange="updateSurMesureSummary()" class="sur-mesure-select w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 text-sm focus:outline-none focus:border-green-600">
-                            <option value="0" selected>0 kg</option>
-                            <option value="0.5">500 gr</option>
-                            <option value="1">1 kg</option>
-                            <option value="2">2 kg</option>
-                            <option value="3">3 kg</option>
-                            <option value="4">4 kg</option>
+                            <option value="0" selected>0</option>
+                            <option value="500">500 g</option>
+                            <option value="1000">1 kg</option>
+                            <option value="2000">2 kg</option>
+                            <option value="3000">3 kg</option>
+                            <option value="4000">4 kg</option>
                         </select>
                     </div>
                 </div>
@@ -526,14 +491,14 @@
                         <span class="text-sm font-extrabold text-green-700" data-price="3.80">3,80 € / kg</span>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité (kg) :</label>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité :</label>
                         <select onchange="updateSurMesureSummary()" class="sur-mesure-select w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 text-sm focus:outline-none focus:border-green-600">
-                            <option value="0" selected>0 kg</option>
-                            <option value="0.5">500 gr</option>
-                            <option value="1">1 kg</option>
-                            <option value="2">2 kg</option>
-                            <option value="3">3 kg</option>
-                            <option value="4">4 kg</option>
+                            <option value="0" selected>0</option>
+                            <option value="500">500 g</option>
+                            <option value="1000">1 kg</option>
+                            <option value="2000">2 kg</option>
+                            <option value="3000">3 kg</option>
+                            <option value="4000">4 kg</option>
                         </select>
                     </div>
                 </div>
@@ -550,14 +515,14 @@
                         <span class="text-sm font-extrabold text-green-700" data-price="6.50">6,50 € / kg</span>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité (kg) :</label>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité :</label>
                         <select onchange="updateSurMesureSummary()" class="sur-mesure-select w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 text-sm focus:outline-none focus:border-green-600">
-                            <option value="0" selected>0 kg</option>
-                            <option value="0.5">500 gr</option>
-                            <option value="1">1 kg</option>
-                            <option value="2">2 kg</option>
-                            <option value="3">3 kg</option>
-                            <option value="4">4 kg</option>
+                            <option value="0" selected>0</option>
+                            <option value="500">500 g</option>
+                            <option value="1000">1 kg</option>
+                            <option value="2000">2 kg</option>
+                            <option value="3000">3 kg</option>
+                            <option value="4000">4 kg</option>
                         </select>
                     </div>
                 </div>
@@ -574,14 +539,14 @@
                         <span class="text-sm font-extrabold text-green-700" data-price="3.00">3,00 € / kg</span>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité (kg) :</label>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité :</label>
                         <select onchange="updateSurMesureSummary()" class="sur-mesure-select w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 text-sm focus:outline-none focus:border-green-600">
-                            <option value="0" selected>0 kg</option>
-                            <option value="0.5">500 gr</option>
-                            <option value="1">1 kg</option>
-                            <option value="2">2 kg</option>
-                            <option value="3">3 kg</option>
-                            <option value="4">4 kg</option>
+                            <option value="0" selected>0</option>
+                            <option value="500">500 g</option>
+                            <option value="1000">1 kg</option>
+                            <option value="2000">2 kg</option>
+                            <option value="3000">3 kg</option>
+                            <option value="4000">4 kg</option>
                         </select>
                     </div>
                 </div>
@@ -679,9 +644,39 @@
                 </div>
             </div>
 
+            <!-- Vignette : Oeufs -->
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between reveal group hover:shadow-xl transition" id="vignette-oeufs">
+                <div class="relative h-48 overflow-hidden bg-gray-100">
+                    <img src="Image/oeuf.jpg" alt="Oeufs" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-4 space-y-3">
+                    <div class="flex justify-between items-baseline">
+                        <h3 class="font-bold text-gray-900 text-base" data-name="Oeufs">Oeufs</h3>
+                        <span class="text-sm font-extrabold text-green-700" id="oeufs-price-display">5,00 €</span>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Conditionnement :</label>
+                        <select id="oeufs-format-select" onchange="updateOeufsPrice(); updateSurMesureSummary();" class="sur-mesure-select w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 text-sm focus:outline-none focus:border-green-600">
+                            <option value="6" data-price="5.00" data-name="Oeufs (6)" selected>6 œufs (5,00 €)</option>
+                            <option value="12" data-price="10.00" data-name="Oeufs (12)">12 œufs (10,00 €)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Quantité :</label>
+                        <select onchange="updateSurMesureSummary()" class="sur-mesure-select w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 text-sm focus:outline-none focus:border-green-600">
+                            <option value="0" selected>0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
-        <!-- Tableau récapitulatif dynamique du panier sur-mesure -->
+        <!-- Tableau récapitulatif dynamique -->
         <div class="max-w-4xl mx-auto mt-16 bg-white rounded-2xl shadow-xl overflow-hidden border border-green-200 p-6 reveal">
             <h3 class="text-xl font-bold text-green-900 mb-4 flex items-center gap-2">
                 <i class="fa-solid fa-basket-shopping text-green-600"></i> Récapitulatif de votre sélection sur-mesure
@@ -723,7 +718,7 @@
             <div class="grid md:grid-cols-2 gap-10 items-center bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-emerald-100 reveal">
                 <div class="space-y-6 text-gray-700 leading-relaxed text-base">
                     <p>
-                        Derrière chaque fruit et légume se cache une histoire de terre, de respect et de passion. Bienvenue au Jardin Bio au 12ème kilomètre, au cœur des hauteurs du Tampon à La Réunion, là où opère la magie de <strong class="text-green-800 font-semibold">Guy Huet</strong>, producteur bio engagé.
+                        Derrière chaque fruit et légume se cache une histoire de terre, de respect et de passion. Bienvenue au Jardin Bio au 12e kilomètre, au cœur des hauteurs du Tampon à La Réunion, là où opère la magie de <strong class="text-green-800 font-semibold">Guy Huet</strong>, producteur bio engagé.
                     </p>
                     <p>
                         Chaque matin, dès l'aurore, Guy arpente ses champs avec une énergie contagieuse. Aux côtés de <strong class="text-green-800 font-semibold">Bruno</strong> et <strong class="text-green-800 font-semibold">Fabrice</strong>, ils forment un trio soudé, les mains dans la terre pour faire vivre une <strong class="text-green-800 font-semibold">agriculture biologique exigeante et sincère</strong>.
@@ -749,7 +744,7 @@
 
                 <div class="space-y-4">
                     <div class="rounded-2xl overflow-hidden shadow-lg bg-gray-900 flex items-center justify-center border-2 border-emerald-100 w-full">
-                        <img src="https://images.pexels.com/photos/1656663/pexels-photo-1656663.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Radis et carottes frais" class="w-full h-auto object-cover block">
+                        <img src="https://images.pexels.com/photos/1656663/pexels-photo-1656663.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Légumes frais" class="w-full h-auto object-cover block">
                     </div>
                     <p class="text-center italic text-sm text-gray-500">« De la terre réunionnaise à votre assiette, le vrai goût du travail de passionnés. » 🌿✨</p>
                 </div>
@@ -800,14 +795,13 @@
                     <select name="formule" id="formule-select" required onchange="updatePrice(); updateSurMesureSummary();" class="w-full px-4 py-3 rounded-lg bg-green-800 border border-green-700 text-white focus:outline-none focus:border-amber-400">
                         <option value="aucun" data-price="0">-- Aucun (uniquement les produits sur-mesure) --</option>
                         <option value="panier_unique" data-price="40">Le panier Découverte (1 panier - 40 €)</option>
-                        <option value="formule_5" data-price="190">Votre Carnet de 5 Paniers Bio (190 € - soit 38 €/panier)</option>
-                        <option value="formule_10" data-price="360">Votre Carnet de 10 Paniers Bio (360 € - soit 36 €/panier)</option>
+                        <option value="formule_3" data-price="120">Votre Carnet de 3 Paniers Bio (120 € - 40 €/panier)</option>
+                        <option value="formule_5" data-price="200">Votre Carnet de 5 Paniers Bio (200 € - 40 €/panier)</option>
                         <option value="abo_trimestriel" data-price="210">Club Bio - Formule Petite Saison (210 €)</option>
-                        <option value="abo_semestriel" data-price="420">Club Bio - Formule Grande Saison (420 €)</option>
                     </select>
                 </div>
 
-                <!-- Récapitulatif dynamique inclus dans le formulaire de commande -->
+                <!-- Récapitulatif dynamique -->
                 <div class="bg-green-800/60 p-4 rounded-xl border border-green-700 space-y-2 text-sm">
                     <div class="font-bold text-amber-300 flex items-center justify-between">
                         <span>Détail de votre panier global :</span>
@@ -939,11 +933,9 @@
 
     <!-- SCRIPT JS -->
     <script>
-        // Initialisation de Stripe gérée dynamiquement (évite la duplication et les conflits de clés)
         let stripe;
 
         document.addEventListener("DOMContentLoaded", async function() {
-            // Récupération dynamique de la clé publique Stripe depuis le serveur
             try {
                 const backendUrl = window.location.hostname.includes('localhost') 
                     ? window.location.origin 
@@ -1050,7 +1042,6 @@
                 });
             }
 
-            // Gestion de la soumission du formulaire et appel fetch au serveur
             const checkoutForm = document.getElementById('checkout-form');
             if (checkoutForm) {
                 checkoutForm.addEventListener('submit', async function(e) {
@@ -1059,33 +1050,32 @@
                     const select = document.getElementById('formule-select');
                     const selectedOption = select.options[select.selectedIndex];
                     const formuleValue = select.value;
-                    let libelleFormule = formuleValue !== 'aucun' ? selectedOption.text : 'Produits sur-mesure uniquement';
                     
                     let montantFormule = formuleValue !== 'aucun' ? parseFloat(selectedOption.getAttribute('data-price')) : 0;
-                    let montantSurMesure = calculateSurMesureTotal();
-                    let fraisLivraison = (formuleValue === 'aucun' && montantSurMesure > 0) ? 10 : 0;
-                    let montantEuros = montantFormule + montantSurMesure + fraisLivraison;
+                    let produitsSurMesure = getSelectedProduitsSurMesure();
+                    let montantSurMesure = produitsSurMesure.reduce((sum, item) => sum + item.total, 0);
+                    let fraisLivraison = ((!formuleValue || formuleValue === 'aucun') && montantSurMesure > 0) ? 5 : 0;
+                    let montantTotal = montantFormule + montantSurMesure + fraisLivraison;
 
-                    if (montantEuros <= 0) {
-                        alert("Veuillez sélectionner au moins une formule ou des produits sur-mesure.");
+                    if (montantTotal <= 0) {
+                        alert("Veuillez sélectionner au moins une formule ou un produit sur-mesure.");
                         return;
                     }
 
-                    let detailsSurMesure = getSurMesureDetails();
-                    const formData = new FormData(checkoutForm);
-
-                    const clientData = {
-                        formule: formuleValue,
-                        nom: formData.get('nom') || '',
-                        prenom: formData.get('prenom') || '',
-                        adresse: formData.get('adresse') || '',
-                        telephone: formData.get('telephone') || '',
-                        date: formData.get('date_livraison') || '',
-                        message: formData.get('message') || '',
-                        produitsSurMesure: detailsSurMesure,
-                        montantTotalEuros: montantEuros
+                    const formData = {
+                        formule: formuleValue === 'aucun' ? '' : formuleValue,
+                        produitsSurMesure: produitsSurMesure.map(i => ({ nom: i.nom, quantite: Number(i.quantite) })),
+                        nom: document.getElementById('nom').value,
+                        prenom: document.getElementById('prenom').value,
+                        adresse: document.getElementById('adresse').value,
+                        telephone: document.getElementById('telephone').value,
+                        date_livraison: document.getElementById('delivery-date').value,
+                        message: document.getElementById('message').value
                     };
-                    localStorage.setItem('soukinpanie_client', JSON.stringify(clientData));
+
+                    const submitButton = document.getElementById('submit-button');
+                    submitButton.disabled = true;
+                    submitButton.innerText = "Redirection vers le paiement...";
 
                     try {
                         const backendUrl = window.location.hostname.includes('localhost') 
@@ -1095,161 +1085,199 @@
                         const response = await fetch(`${backendUrl}/create-checkout-session`, {
                             method: 'POST',
                             headers: {
-                                'Content-Type': 'application/json',
+                                'Content-Type': 'application/json'
                             },
-                            body: JSON.stringify({
-                                formule: formuleValue,
-                                produitsSurMesure: detailsSurMesure,
-                                nom: formData.get('nom') || '',
-                                prenom: formData.get('prenom') || '',
-                                adresse: formData.get('adresse') || '',
-                                telephone: formData.get('telephone') || '',
-                                date_livraison: formData.get('date_livraison') || '',
-                                message: formData.get('message') || ''
-                            })
+                            body: JSON.stringify(formData)
                         });
 
-                        const data = await response.json();
+                        const session = await response.json();
 
-                        if (data.error) {
-                            alert("Erreur : " + data.error);
+                        if (session.error) {
+                            alert("Erreur : " + session.error);
+                            submitButton.disabled = false;
+                            submitButton.innerText = "Procéder au paiement sécurisé 💳";
                             return;
                         }
 
-                        if (data.url) {
-                            window.location.href = data.url;
-                        } else if (data.id && stripe) {
+                        if (session.id && stripe) {
                             const result = await stripe.redirectToCheckout({
-                                sessionId: data.id
+                                sessionId: session.id
                             });
                             if (result.error) {
                                 alert(result.error.message);
+                                submitButton.disabled = false;
+                                submitButton.innerText = "Procéder au paiement sécurisé 💳";
                             }
+                        } else if (session.url) {
+                            window.location.href = session.url;
                         } else {
                             alert("Erreur lors de la création de la session de paiement.");
+                            submitButton.disabled = false;
+                            submitButton.innerText = "Procéder au paiement sécurisé 💳";
                         }
-
-                    } catch (error) {
-                        console.error("Erreur réseau :", error);
-                        alert("Impossible de joindre le serveur de paiement.");
+                    } catch (err) {
+                        console.error("Erreur réseau :", err);
+                        alert("Une erreur est survenue lors de la communication avec le serveur.");
+                        submitButton.disabled = false;
+                        submitButton.innerText = "Procéder au paiement sécurisé 💳";
                     }
                 });
             }
-
-            updateSurMesureSummary();
         });
 
-        function selectFormule(formuleValue) {
+        function selectFormule(formuleKey) {
             const select = document.getElementById('formule-select');
             if (select) {
-                select.value = formuleValue;
+                select.value = formuleKey;
                 updatePrice();
                 updateSurMesureSummary();
             }
         }
 
-        function calculateSurMesureTotal() {
-            const selects = document.querySelectorAll('.sur-mesure-select');
-            let total = 0;
-            selects.forEach(select => {
-                const qty = parseFloat(select.value);
-                if (qty > 0) {
-                    const card = select.closest('.bg-white');
-                    const unitPrice = parseFloat(card.querySelector('.text-green-700').getAttribute('data-price'));
-                    total += qty * unitPrice;
-                }
-            });
-            return total;
+        function updateOeufsPrice() {
+            const select = document.getElementById('oeufs-format-select');
+            const display = document.getElementById('oeufs-price-display');
+            if (select && display) {
+                const selectedOpt = select.options[select.selectedIndex];
+                const price = parseFloat(selectedOpt.getAttribute('data-price'));
+                display.innerText = price.toFixed(2).replace('.', ',') + ' €';
+            }
         }
 
-        function getSurMesureDetails() {
-            const selects = document.querySelectorAll('.sur-mesure-select');
-            let produitsChoisis = [];
-            selects.forEach(select => {
-                const quantite = parseFloat(select.value);
-                if (quantite > 0) {
-                    const card = select.closest('.bg-white');
-                    const nom = card.querySelector('[data-name]').getAttribute('data-name');
-                    produitsChoisis.push({ nom: nom, quantite: quantite });
+        function getSelectedProduitsSurMesure() {
+            let produits = [];
+            const vignettes = document.querySelectorAll('#panier-sur-mesure > div.grid > div');
+            const weightProducts = ['Tomates anciennes', 'Pomme de terre', 'Courgettes du jardin', 'Citrons bio', 'Betteraves fraîches', 'Haricots verts', 'Bananes'];
+            
+            vignettes.forEach(vignette => {
+                const nameEl = vignette.querySelector('[data-name]');
+                const selects = vignette.querySelectorAll('.sur-mesure-select');
+                
+                if (nameEl && selects.length > 0) {
+                    if (vignette.id === 'vignette-oeufs') {
+                        const formatSelect = document.getElementById('oeufs-format-select');
+                        const qtySelect = selects[1];
+                        if (formatSelect && qtySelect) {
+                            const qty = parseInt(qtySelect.value);
+                            if (qty > 0) {
+                                const selectedOpt = formatSelect.options[formatSelect.selectedIndex];
+                                const productName = selectedOpt.getAttribute('data-name');
+                                const unitPrice = parseFloat(selectedOpt.getAttribute('data-price'));
+                                produits.push({
+                                    nom: productName,
+                                    quantite: qty,
+                                    affichage: `${qty} unité(s)`,
+                                    prixUnitaire: unitPrice,
+                                    total: qty * unitPrice
+                                });
+                            }
+                        }
+                    } else {
+                        const productName = nameEl.getAttribute('data-name');
+                        const priceSpan = vignette.querySelector('[data-price]');
+                        const unitPrice = priceSpan ? parseFloat(priceSpan.getAttribute('data-price')) : 0;
+                        const rawVal = parseInt(selects[0].value);
+                        
+                        if (rawVal > 0) {
+                            let quantiteKgOrUnits = rawVal;
+                            let displayQty = `${rawVal}`;
+
+                            if (weightProducts.includes(productName)) {
+                                quantiteKgOrUnits = rawVal / 1000; 
+                                displayQty = rawVal >= 1000 ? `${rawVal / 1000} kg` : `${rawVal} g`;
+                            }
+
+                            const total = quantiteKgOrUnits * unitPrice;
+
+                            produits.push({
+                                nom: productName,
+                                quantite: quantiteKgOrUnits,
+                                affichage: displayQty,
+                                prixUnitaire: unitPrice,
+                                total: total
+                            });
+                        }
+                    }
                 }
             });
-            return produitsChoisis;
+            return produits;
         }
 
         function updateSurMesureSummary() {
-            const tbody = document.getElementById('sur-mesure-summary-body');
-            const formSummary = document.getElementById('form-summary-details');
-            const selects = document.querySelectorAll('.sur-mesure-select');
+            const summaryBody = document.getElementById('sur-mesure-summary-body');
+            const summaryTotal = document.getElementById('sur-mesure-total-price');
+            const formSummaryDetails = document.getElementById('form-summary-details');
             
-            let htmlTable = '';
-            let htmlForm = '';
-            let totalProduits = 0;
-            let hasItems = false;
+            if (!summaryBody || !summaryTotal) return;
 
-            selects.forEach(select => {
-                const qty = parseFloat(select.value);
-                if (qty > 0) {
-                    hasItems = true;
-                    const card = select.closest('.bg-white');
-                    const nom = card.querySelector('[data-name]').getAttribute('data-name');
-                    const unitPrice = parseFloat(card.querySelector('.text-green-700').getAttribute('data-price'));
-                    const totalLigne = qty * unitPrice;
-                    totalProduits += totalLigne;
+            const produits = getSelectedProduitsSurMesure();
+            let totalSurMesure = 0;
 
-                    htmlTable += `
-                        <tr class="border-b border-gray-100">
-                            <td class="py-3 px-4 font-medium text-gray-900">${nom}</td>
-                            <td class="py-3 px-4 text-gray-600">${qty}</td>
-                            <td class="py-3 px-4 text-gray-600">${unitPrice.toFixed(2)} €</td>
-                            <td class="py-3 px-4 text-right font-bold text-green-700">${totalLigne.toFixed(2)} €</td>
-                        </tr>
-                    `;
-
-                    htmlForm += `<p>• ${nom} : ${qty} x ${unitPrice.toFixed(2)} € = <strong>${totalLigne.toFixed(2)} €</strong></p>`;
+            if (produits.length === 0) {
+                summaryBody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-gray-500 italic">Aucun produit sélectionné pour le moment.</td></tr>`;
+                summaryTotal.innerText = "0,00 €";
+                if (formSummaryDetails) {
+                    formSummaryDetails.innerHTML = `<p class="italic">Aucun produit sur-mesure sélectionné (optionnel).</p>`;
                 }
-            });
-
-            if (!hasItems) {
-                htmlTable = `<tr><td colspan="4" class="py-4 text-center text-gray-500 italic">Aucun produit sélectionné pour le moment.</td></tr>`;
-                htmlForm = `<p class="italic">Aucun produit sur-mesure sélectionné (optionnel).</p>`;
+                updatePrice();
+                return;
             }
 
-            if (tbody) tbody.innerHTML = htmlTable;
-            if (formSummary) formSummary.innerHTML = htmlForm;
+            let htmlContent = '';
+            let formHtmlContent = '';
 
-            const totalSpan = document.getElementById('sur-mesure-total-price');
-            if (totalSpan) totalSpan.innerText = totalProduits.toFixed(2) + ' €';
+            produits.forEach(item => {
+                totalSurMesure += item.total;
+                htmlContent += `
+                    <tr class="border-b border-gray-100">
+                        <td class="py-3 px-4 font-medium text-gray-800">${item.nom}</td>
+                        <td class="py-3 px-4 text-gray-600">${item.affichage}</td>
+                        <td class="py-3 px-4 text-gray-600">${item.prixUnitaire.toFixed(2).replace('.', ',')} €</td>
+                        <td class="py-3 px-4 text-right font-bold text-green-700">${item.total.toFixed(2).replace('.', ',')} €</td>
+                    </tr>
+                `;
+                formHtmlContent += `<p>• ${item.nom} x ${item.affichage} : <strong>${item.total.toFixed(2).replace('.', ',')} €</strong></p>`;
+            });
+
+            summaryBody.innerHTML = htmlContent;
+            summaryTotal.innerText = totalSurMesure.toFixed(2).replace('.', ',') + ' €';
+
+            if (formSummaryDetails) {
+                formSummaryDetails.innerHTML = formHtmlContent;
+            }
 
             updatePrice();
         }
 
-        function updatePrice() {
-            const select = document.getElementById('formule-select');
-            let prixFormule = 0;
-            if (select && select.value !== 'aucun') {
-                const selectedOption = select.options[select.selectedIndex];
-                prixFormule = parseFloat(selectedOption.getAttribute('data-price')) || 0;
-            }
-
-            let montantSurMesure = calculateSurMesureTestTotal = calculateSurMesureTotal();
-            let fraisLivraison = ((!select || select.value === 'aucun') && montantSurMesure > 0) ? 10 : 0;
-            let totalGlobal = prixFormule + montantSurMesure + fraisLivraison;
-
-            const display = document.getElementById('price-display-checkout');
-            if (display) {
-                let text = `${totalGlobal.toFixed(2)} €`;
-                if (frysLivraison = fraisLivraison > 0) {
-                    text += ` (inclut 10 € de frais de livraison)`;
-                }
-                display.innerText = text;
+        function ajouterAuPanierGlobal() {
+            const el = document.getElementById('commande');
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
             }
         }
 
-        function ajouterAuPanierGlobal() {
-            const section = document.getElementById('commande');
-            if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
+        function updatePrice() {
+            const select = document.getElementById('formule-select');
+            const priceDisplay = document.getElementById('price-display-checkout');
+            
+            if (!select || !priceDisplay) return;
+
+            const selectedOption = select.options[select.selectedIndex];
+            const formuleValue = select.value;
+            let montantFormule = formuleValue !== 'aucun' ? parseFloat(selectedOption.getAttribute('data-price')) : 0;
+            
+            const produits = getSelectedProduitsSurMesure();
+            let montantSurMesure = produits.reduce((sum, item) => sum + item.total, 0);
+            
+            let fraisLivraison = ((!formuleValue || formuleValue === 'aucun') && montantSurMesure > 0) ? 5 : 0;
+            let totalGlobal = montantFormule + montantSurMesure + fraisLivraison;
+
+            let displayString = totalGlobal.toFixed(2).replace('.', ',') + ' €';
+            if (fraisLivraison > 0) {
+                displayString += ` (dont ${fraisLivraison} € de frais de livraison)`;
             }
+
+            priceDisplay.innerText = displayString;
         }
     </script>
 </body>

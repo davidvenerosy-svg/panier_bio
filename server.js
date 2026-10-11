@@ -3,7 +3,7 @@ console.log("TEST MONGO_URI :", process.env.MONGO_URI);
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const express = require('express');
 const app = express();
-const cors = require('cors'); // Gère les requêtes cross-origin entre le front et le back
+const cors = require('cors');
 const mongoose = require('mongoose');
 
 // Connexion à MongoDB Atlas
@@ -11,9 +11,8 @@ mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("Connecté à MongoDB Atlas avec succès"))
     .catch(err => console.error("Erreur de connexion MongoDB :", err));
 
-// Définition du schéma et du modèle Mongoose pour les commandes
 const commandeSchema = new mongoose.Schema({
-    idSession: String,
+    idSession: { type: String, unique: true },
     client: {
         nom: String,
         prenom: String,
@@ -30,13 +29,11 @@ const commandeSchema = new mongoose.Schema({
 
 const Commande = mongoose.model('Commande', commandeSchema);
 
-// Grille tarifaire sécurisée stockée côté serveur
 const GRILLE_TARIFAIRE = {
     'panier_unique': { nom: 'Le panier Découverte', prix: 40 },
-    'formule_5': { nom: 'Votre Carnet de 5 Paniers Bio', prix: 190 },
-    'formule_10': { nom: 'Votre Carnet de 10 Paniers Bio', prix: 360 },
+    'formule_3': { nom: 'Votre Carnet de 3 Paniers Bio', prix: 120 },
+    'formule_5': { nom: 'Votre Carnet de 5 Paniers Bio', prix: 200 },
     'abo_trimestriel': { nom: 'Club Bio - Formule Petite Saison', prix: 210 },
-    'abo_semestriel': { nom: 'Club Bio - Formule Grande Saison', prix: 420 },
     'aucun': { nom: 'Produits sur-mesure uniquement', prix: 0 }
 };
 
@@ -52,14 +49,13 @@ const PRIX_PRODUITS_SUR_MESURE = {
     'Tomate Cerise': 3.00,
     'Brèdes': 2.00,
     'Salade': 2.00,
-    'Roquette': 2.50
+    'Roquette': 2.50,
+    'Oeufs (6)': 5.00,
+    'Oeufs (12)': 10.00
 };
 
-// Activation de CORS pour autoriser les communications locales
 app.use(cors());
 
-// Middleware pour récupérer le corps brut (raw body) indispensable à la validation du webhook Stripe,
-// tout en appliquant express.json() pour les autres routes normales.
 app.use((req, res, next) => {
     if (req.originalUrl === '/webhook') {
         let data = '';
@@ -76,17 +72,14 @@ app.use((req, res, next) => {
     }
 });
 
-// Utilisation de __dirname pour servir les fichiers statiques depuis la racine du projet
 app.use(express.static(__dirname));
 
-// Route pour fournir la clé publique Stripe au front-end
 app.get('/config', (req, res) => {
     res.send({
         publicKey: process.env.STRIPE_PUBLISHABLE_KEY
     });
 });
 
-// Route pour créer la session de paiement Stripe
 app.post('/create-checkout-session', async (req, res) => {
     try {
         const { 
@@ -104,7 +97,7 @@ app.post('/create-checkout-session', async (req, res) => {
         let montantFormule = 0;
 
         if (formule && GRILLE_TARIFAIRE[formule]) {
-            montantFormule = GRILLE_TARIFAIRE[formule].prix;
+            montantFormule = Number(GRILLE_TARIFAIRE[formule].prix);
             const nomFormule = GRILLE_TARIFAIRE[formule].nom;
 
             if (montantFormule > 0) {
@@ -132,32 +125,33 @@ app.post('/create-checkout-session', async (req, res) => {
                 const quantite = parseFloat(item.quantite);
 
                 if (nomProduit && PRIX_PRODUITS_SUR_MESURE[nomProduit] !== undefined && !isNaN(quantite) && quantite > 0) {
-                    const prixUnitaire = PRIX_PRODUITS_SUR_MESURE[nomProduit];
-                    const totalLigne = quantite * prixUnitaire;
+                    const prixUnitaireKg = Number(PRIX_PRODUITS_SUR_MESURE[nomProduit]);
+                    const totalLigne = quantite * prixUnitaireKg;
                     montantSurMesure += totalLigne;
 
                     produitsValides.push({
                         nom: nomProduit,
                         quantite: quantite,
-                        prixUnitaireEuros: prixUnitaire,
+                        prixUnitaireEuros: prixUnitaireKg,
                         totalLigneEuros: totalLigne
                     });
 
+                    // Quantité Stripe toujours fixée strictement à 1 entier pour éviter l'erreur "Invalid integer"
                     lineItems.push({
                         price_data: {
                             currency: 'eur',
                             product_data: {
-                                name: `${nomProduit} (Sur-mesure)`,
+                                name: `${nomProduit} (${quantite >= 1 ? quantite + 'kg' : (quantite * 1000) + 'g'} x ${prixUnitaireKg}€)`,
                             },
-                            unit_amount: Math.round(prixUnitaire * 100),
+                            unit_amount: Math.round(totalLigne * 100),
                         },
-                        quantity: quantite,
+                        quantity: 1,
                     });
                 }
             }
         }
 
-        let fraisLivraison = ((!formule || formule === 'aucun') && montantSurMesure > 0) ? 10 : 0;
+        let fraisLivraison = ((!formule || formule === 'aucun') && montantSurMesure > 0) ? 5 : 0;
 
         if (fraisLivraison > 0) {
             lineItems.push({
@@ -215,7 +209,6 @@ app.post('/create-checkout-session', async (req, res) => {
     }
 });
 
-// Route /webhook pour écouter l'événement de paiement validé par Stripe
 app.post('/webhook', async (req, res) => {
     const sig = req.headers['stripe-signature'];
     let event;
@@ -230,7 +223,6 @@ app.post('/webhook', async (req, res) => {
     if (event.type === 'checkout.session.completed') {
         const session = event.data.object;
         
-        // Reconstitution des morceaux de produits sur-mesure depuis les métadonnées
         let produitsSurMesureParses = [];
         try {
             const m1 = session.metadata.produitsSurMesure_1 || '';
@@ -241,10 +233,9 @@ app.post('/webhook', async (req, res) => {
                 produitsSurMesureParses = JSON.parse(combinedString);
             }
         } catch (errParse) {
-            console.error("Erreur lors du parsing des produits sur-mesure des métadonnées :", errParse);
+            console.error("Erreur lors du parsing des produits sur-mesure :", errParse);
         }
 
-        // Enregistrement sécurisé de la commande dans MongoDB Atlas
         try {
             const nouvelleCommande = new Commande({
                 idSession: session.id,
@@ -264,15 +255,70 @@ app.post('/webhook', async (req, res) => {
             await nouvelleCommande.save();
             console.log("Commande enregistrée dans MongoDB avec succès !");
         } catch (e) {
-            console.error("Erreur lors de l'enregistrement de la commande dans MongoDB :", e);
+            console.error("Erreur lors de l'enregistrement MongoDB :", e);
         }
     }
 
     res.status(200).json({ received: true });
 });
 
-// Lancement du serveur
-const PORT = process.env.PORT || 4242;
+app.post('/verify-session', async (req, res) => {
+    try {
+        const { sessionId } = req.body;
+        if (!sessionId) {
+            return res.status(400).json({ error: "Session ID manquant." });
+        }
+
+        const commandeExistante = await Commande.findOne({ idSession: sessionId });
+        if (commandeExistante) {
+            return res.status(200).json({ success: true, message: "Commande déjà enregistrée." });
+        }
+
+        const session = await stripe.checkout.sessions.retrieve(sessionId);
+        
+        if (session.payment_status === 'paid') {
+            let produitsSurMesureParses = [];
+            try {
+                const m1 = session.metadata.produitsSurMesure_1 || '';
+                const m2 = session.metadata.produitsSurMesure_2 || '';
+                const m3 = session.metadata.produitsSurMesure_3 || '';
+                const combinedString = m1 + m2 + m3;
+                if (combinedString.trim() !== '') {
+                    produitsSurMesureParses = JSON.parse(combinedString);
+                }
+            } catch (errParse) {
+                console.error("Erreur parsing métadonnées de secours :", errParse);
+            }
+
+            const nouvelleCommande = new Commande({
+                idSession: session.id,
+                client: {
+                    nom: session.metadata.nom,
+                    prenom: session.metadata.prenom,
+                    adresse: session.metadata.adresse,
+                    telephone: session.metadata.telephone
+                },
+                formule: session.metadata.formule,
+                produitsSurMesure: produitsSurMesureParses,
+                dateLivraison: session.metadata.date_livraison,
+                message: session.metadata.message,
+                montantTotal: session.metadata.montantTotalEuros
+            });
+
+            await nouvelleCommande.save();
+            console.log("Commande enregistrée via la route de secours !");
+            return res.status(200).json({ success: true, message: "Commande enregistrée avec succès." });
+        } else {
+            return res.status(400).json({ error: "Le paiement n'a pas été validé." });
+        }
+
+    } catch (error) {
+        console.error("Erreur lors de la vérification de la session :", error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur le port ${PORT}`);
 });
